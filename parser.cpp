@@ -14,5 +14,5 @@ void print(int v, const std::vector<Node>& tree){
 }
 
 void getTokenTree(std::vector<Node> tree){
-    print(0, tree);
+//    print(0, tree);
 }
