@@ -9,6 +9,11 @@ If you need to print something:
 To compile text
 `~`
 
+### EXAMPLES
+
+
+###### №1
+
 ```asm
     @debug
 
@@ -27,4 +32,23 @@ RETURNS
     print ok op + (  
      
     5 
+```
+
+###### №2
+
+```asm
+    @debug
+
+    int lol = 2+3-4;
+    print(lol-3);
+    ~
+```
+
+RETURNS
+
+```asm
+    lol 0 2 3 + 4 - =  
+    print lol 3 - (  
+ 
+    -2 
 ```
