@@ -143,6 +143,33 @@ maffin/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/maffin.dir/build.make CMakeFiles/maffin.dir/build
 .PHONY : maffin/fast
 
+imports.o: imports.cpp.o
+
+.PHONY : imports.o
+
+# target to build an object file
+imports.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/maffin.dir/build.make CMakeFiles/maffin.dir/imports.cpp.o
+.PHONY : imports.cpp.o
+
+imports.i: imports.cpp.i
+
+.PHONY : imports.i
+
+# target to preprocess a source file
+imports.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/maffin.dir/build.make CMakeFiles/maffin.dir/imports.cpp.i
+.PHONY : imports.cpp.i
+
+imports.s: imports.cpp.s
+
+.PHONY : imports.s
+
+# target to generate assembly for a file
+imports.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/maffin.dir/build.make CMakeFiles/maffin.dir/imports.cpp.s
+.PHONY : imports.cpp.s
+
 lexer.o: lexer.cpp.o
 
 .PHONY : lexer.o
@@ -260,6 +287,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... maffin"
+	@echo "... imports.o"
+	@echo "... imports.i"
+	@echo "... imports.s"
 	@echo "... lexer.o"
 	@echo "... lexer.i"
 	@echo "... lexer.s"

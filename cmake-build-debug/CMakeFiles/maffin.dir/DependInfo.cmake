@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/Users/Pro/Desktop/maffin/imports.cpp" "/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/maffin.dir/imports.cpp.o"
   "/Users/Pro/Desktop/maffin/lexer.cpp" "/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/maffin.dir/lexer.cpp.o"
   "/Users/Pro/Desktop/maffin/main.cpp" "/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/maffin.dir/main.cpp.o"
   "/Users/Pro/Desktop/maffin/parser.cpp" "/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/maffin.dir/parser.cpp.o"

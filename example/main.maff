@@ -1,6 +1,5 @@
-func main : int -> int
-{
-    int lol = 5;
-    lol = lol + 5;
-    return 0;
-}
+@debug
+
+print(2);
+
+~

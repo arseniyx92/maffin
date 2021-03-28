@@ -15,6 +15,8 @@ public:
     int id;
     std::string val;
     std::vector<int> children;
+    std::vector<std::string> constss;
+    std::vector<std::string> varss;
     Node(int id, std::string val): id(id), val(val){}
 };
 
@@ -23,7 +25,7 @@ public:
     int get_id(){
         return id;
     }
-    Token(): id(228){}
+    Token(): id(0){}
 private:
     int id;
 };
