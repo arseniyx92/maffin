@@ -8,11 +8,7 @@
 
 /Users/Pro/Desktop/maffin/include/imports.h
 
-/Users/Pro/Desktop/maffin/include/lexer.h
-string
--
-tuple
--
+/Users/Pro/Desktop/maffin/include/parser.h
 token.h
 /Users/Pro/Desktop/maffin/include/token.h
 
@@ -30,15 +26,21 @@ unordered_map
 vector
 -
 
-/Users/Pro/Desktop/maffin/main.cpp
+/Users/Pro/Desktop/maffin/parser.cpp
+include/parser.h
+/Users/Pro/Desktop/maffin/include/parser.h
+include/imports.h
+/Users/Pro/Desktop/maffin/include/imports.h
 iostream
 -
-fstream
+unordered_map
+-
+unordered_set
 -
 string
 -
-include/lexer.h
-/Users/Pro/Desktop/maffin/include/lexer.h
-include/imports.h
-/Users/Pro/Desktop/maffin/include/imports.h
+random
+-
+ctime
+-
 

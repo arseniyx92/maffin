@@ -310,9 +310,9 @@ void getTokenTree(std::vector<Node> tree){
         print(0, tree);
         std::cout << std::endl;
     }
-    std::pair<std::vector<std::string>, std::vector<std::string> > lol;
-    lol = go(0, tree, -1);
-//    std::cout << intVars["ghjtj"] << std::endl;
+    go(0, tree, -1);
+    std::cout << std::endl;
+    exit(EXIT_SUCCESS);
 }
 
 //int ghjtj = 7+8-1;
