@@ -52,3 +52,7 @@ RETURNS
  
     -2 
 ```
+
+### FUNNY THINGS
+
+![img.png](encoding_constant_into_variable.png)
