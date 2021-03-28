@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/Pro/Desktop/maffin/include/parser.h
+token.h
+/Users/Pro/Desktop/maffin/include/token.h
+
+/Users/Pro/Desktop/maffin/include/token.h
+iostream
+-
+string
+-
+map
+-
+tuple
+-
+unordered_map
+-
+vector
+-
+
+/Users/Pro/Desktop/maffin/token.cpp
+include/parser.h
+/Users/Pro/Desktop/maffin/include/parser.h
+include/token.h
+/Users/Pro/Desktop/maffin/include/token.h
+cassert
+-
+cctype
+-
+

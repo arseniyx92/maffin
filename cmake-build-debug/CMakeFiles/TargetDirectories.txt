@@ -1,0 +1,3 @@
+/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/maffin.dir
