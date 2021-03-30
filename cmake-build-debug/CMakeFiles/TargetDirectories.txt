@@ -1,3 +1,0 @@
-/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles/maffin.dir

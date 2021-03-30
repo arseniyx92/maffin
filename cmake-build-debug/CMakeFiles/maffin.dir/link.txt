@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/maffin.dir/main.cpp.o CMakeFiles/maffin.dir/lexer.cpp.o CMakeFiles/maffin.dir/token.cpp.o CMakeFiles/maffin.dir/parser.cpp.o CMakeFiles/maffin.dir/imports.cpp.o  -o maffin 
