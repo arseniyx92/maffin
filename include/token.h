@@ -15,8 +15,7 @@ public:
     int id;
     std::string val;
     std::vector<int> children;
-    std::vector<std::string> constss;
-    std::vector<std::string> varss;
+    std::vector<std::string> variables;
     Node(int id, std::string val): id(id), val(val){}
 };
 

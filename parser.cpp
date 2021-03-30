@@ -18,7 +18,7 @@ std::unordered_set<std::string> BUILTIN = {
 
 std::mt19937 rnd(std::time(NULL));
 
-std::unordered_map<std::string, int> VarsToType;
+std::unordered_map<std::string, std::pair<bool, int> > VarsToType; // { name, {is var(true) or const(false), what type} }
 /*
 0 - int,
 1 - longint,
@@ -60,7 +60,7 @@ void print(int v, int p, const std::vector<Node>& tree){
 
 void print_vals(const std::vector<std::string>& a){
     for (std::string x:a){
-        switch(VarsToType[x]){
+        switch(VarsToType[x].second){
             case 0:
                 std::cout << intVars[x] << ' ';
                 break;
@@ -82,24 +82,27 @@ std::string genRndString(int len){
     return s;
 }
 
-#define consts tree[v].constss
-#define vars tree[v].varss
+#define vars tree[v].variables
+
 //getting vector of constants and variables
-std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::vector<Node>& tree, int p){
+std::vector<std::string> go(int v, int p, std::vector<Node>& tree){
     for (int j = 0; j < tree[v].children.size(); ++j){
         int i = tree[v].children[j];
-        std::pair<std::vector<std::string>, std::vector<std::string> > cur;
-        cur = go(i, tree, v);
-        for (std::string x:cur.first)
-            consts.push_back(x);
-        for (std::string x:cur.second)
+        std::vector<std::string> cur;
+        cur = go(i, v, tree);
+        for (std::string x:cur)
             vars.push_back(x);
     }
     switch (tree[v].id){
         case 0:
         {
-            if (vars.size() != 1 || consts.size() != 0) assert(false);
-            VarsToType[vars[0]] = stoi(tree[v].val);
+            if (vars.size() != 1) assert(false); // SHOULD BE CHANGED TO MULTIPLE DECLARATION
+            if (VarsToType.count(vars[0])){ // IF ALREADY EXISTS
+                std::cout << "FATAL: " << vars[0] <<  " ALREADY EXISTS" << std::endl;
+                assert(false);
+            }
+            VarsToType[vars[0]].second = stoi(tree[v].val);
+            VarsToType[vars[0]].first = true;
             switch (stoi(tree[v].val)){
                 case 0:
                 {
@@ -119,45 +122,67 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                 default:
                     assert(false);
             }
-            return {{}, {vars[0]}};
+            return {vars[0]};
         }
         case 1:
         {
             if (tree[v].val == "="){
-                if (p == -1 || tree[p].varss.size() != 1 || tree[p].constss.size() != 0 ||
-                    consts.size() != 1 || vars.size() != 0 ||
-                    VarsToType[consts[0]] != VarsToType[tree[p].varss[0]]) assert(false);
-                switch (VarsToType[consts[0]]){
+                if (p == -1 || tree[p].variables.size() != 1 || vars.size() != 1 ||
+                    !VarsToType.count(vars[0]) || !VarsToType.count(tree[p].variables[0]) ||
+                    VarsToType[vars[0]].second != VarsToType[tree[p].variables[0]].second){
+                    if (!VarsToType.count(vars[0]) || !VarsToType.count(tree[p].variables[0])){
+                        std::cout << "'=' - Variable is not declared" << std::endl;
+                    }else if (VarsToType[vars[0]].second != VarsToType[tree[p].variables[0]].second){
+                        std::cout << "'=' - Variables have another types" << std::endl;
+                    }else if (tree[p].variables.size() != 1 || vars.size() != 1){
+                        std::cout << "'=' - U wanna do '=' for multiple variables (it's not ready yet)" << std::endl;
+                    }else{
+                        std::cout << "'=' - something extremely bad happened" << std::endl;
+                    }
+                    assert(false);
+                }
+                switch (VarsToType[vars[0]].second){
                     case 0:
                     {
-                        intVars[tree[p].varss[0]] = intVars[consts[0]];
+                        intVars[tree[p].variables[0]] = intVars[vars[0]];
                         break;
                     }
                     case 1:
                     {
-                        longintVars[tree[p].varss[0]] = longintVars[consts[0]];
+                        longintVars[tree[p].variables[0]] = longintVars[vars[0]];
                         break;
                     }
                     case 13:
                     {
-                        doubleVars[tree[p].varss[0]] = doubleVars[consts[0]];
+                        doubleVars[tree[p].variables[0]] = doubleVars[vars[0]];
                         break;
                     }
                     default:
                         assert(false);
                 }
-                VarsToType.erase(consts[0]);
-                intVars.erase(consts[0]);
-                return {{}, {}};
+                if (VarsToType[vars[0]].first == false){
+                    VarsToType.erase(vars[0]);
+                    intVars.erase(vars[0]);
+                }
+                return {};
             }else if (tree[v].val == "+"){
                 std::string firstStr, secondStr;
-                firstStr = (consts.empty() ? vars[0] : consts[0]);
-                secondStr = (tree[p].varss.empty() ? tree[p].constss[0] : tree[p].varss[0]);
-                if (consts.empty()) vars.pop_back();
-                else consts.pop_back();
-                if (tree[p].constss.empty()) tree[p].varss.pop_back();
-                else tree[p].constss.pop_back();
-                switch (VarsToType[firstStr]){
+                if (vars.empty()){
+                    std::cout << "FATAL: doesn't have enough elements to be composed (+)" << std::endl;
+                    assert(false);
+                }
+                if (tree[p].variables.empty()){
+                    if (vars.size() > 1){
+                        std::cout << "'+x' problem, 'x' is more than 1 variable" << std::endl;
+                        assert(false);
+                    }
+                    return {vars.back()};
+                }
+                firstStr = vars.back();
+                secondStr = tree[p].variables.back();
+                vars.pop_back();
+                tree[p].variables.pop_back();
+                switch (VarsToType[firstStr].second){
                     case 0:
                     {
                         int ans = intVars[firstStr]+intVars[secondStr];
@@ -170,9 +195,9 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                             intVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = 0;
+                        VarsToType[s] = {false, 0};
                         intVars[s] = ans;
-                        return {{s}, {}};
+                        return {s};
                     }
                     case 1:
                     {
@@ -186,9 +211,9 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                             longintVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = 0;
+                        VarsToType[s] = {false, 0};
                         longintVars[s] = ans;
-                        return {{s}, {}};
+                        return {s};
                     }
                     case 13:
                     {
@@ -202,22 +227,36 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                             doubleVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = 0;
+                        VarsToType[s] = {false, 0};
                         doubleVars[s] = ans;
-                        return {{s}, {}};
+                        return {s};
                     }
                     default:
                         assert(false);
                 }
             }else if (tree[v].val == "-"){
                 std::string firstStr, secondStr;
-                firstStr = (tree[p].varss.empty() ? tree[p].constss[0] : tree[p].varss[0]);
-                secondStr = (consts.empty() ? vars[0] : consts[0]);
-                if (consts.empty()) vars.pop_back();
-                else consts.pop_back();
-                if (tree[p].constss.empty()) tree[p].varss.pop_back();
-                else tree[p].constss.pop_back();
-                switch (VarsToType[firstStr]){
+                if (vars.empty()){
+                    std::cout << "FATAL: doesn't have enough elements to be composed (+)" << std::endl;
+                    assert(false);
+                }
+                if (tree[p].variables.empty()){
+                    if (vars.size() > 1){
+                        std::cout << "'-x' problem, 'x' is more than 1 variable" << std::endl;
+                        assert(false);
+                    }
+                    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//                    std::string s = genRndString(5);
+//                    VarsToType[s] = {false, VarsToType[vars.back()].second};
+//                    auto T = arr_from_type(VarsToType[vars.back()].second);
+//                    T[s] = stoi(tree[v].val);
+//                    return {s};
+                }
+                firstStr = tree[p].variables.back();
+                secondStr = vars.back();
+                vars.pop_back();
+                tree[p].variables.pop_back();
+                switch (VarsToType[firstStr].second){
                     case 0:
                     {
                         int ans = intVars[firstStr]-intVars[secondStr];
@@ -230,9 +269,9 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                             intVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = 0;
+                        VarsToType[s] = {false, 0};
                         intVars[s] = ans;
-                        return {{s}, {}};
+                        return {s};
                     }
                     case 1:
                     {
@@ -246,9 +285,9 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                             longintVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = 0;
+                        VarsToType[s] = {false, 0};
                         longintVars[s] = ans;
-                        return {{s}, {}};
+                        return {s};
                     }
                     case 13:
                     {
@@ -262,46 +301,45 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
                             doubleVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = 0;
+                        VarsToType[s] = {false, 0};
                         doubleVars[s] = ans;
-                        return {{s}, {}};
+                        return {s};
                     }
                     default:
                         assert(false);
                 }
             }else if (tree[v].val == "("){
-                if (p != -1 && BUILTIN.find(tree[p].varss.back()) != BUILTIN.end()){
-                    if (tree[p].varss.back() == "print"){
-                        print_vals(consts);
+                if (p != -1 && BUILTIN.find(tree[p].variables.back()) != BUILTIN.end()){
+                    if (tree[p].variables.back() == "print"){
                         print_vals(vars);
                         std::cout << std::endl;
                     }
-                }else if (p != -1 && funcVars.count(tree[p].varss.back())){}
-                return {consts, vars};
+                }else if (p != -1 && funcVars.count(tree[p].variables.back())){}
+                return vars;
             }
         }
         case 2:
         {
             std::string s = genRndString(5);
-            VarsToType[s] = 0;
+            VarsToType[s] = {false, 0};
             intVars[s] = stoi(tree[v].val);
-            return {{s}, {}};
+            return {s};
         }
         case 3:
         {
             std::string s = genRndString(5);
-            VarsToType[s] = 13;
+            VarsToType[s] = {false, 13};
             doubleVars[s] = stod(tree[v].val);
-            return {{s}, {}};
+            return {s};
         }
         case 4:
         {
-            return {{}, {tree[v].val}};
+            return {tree[v].val};
         }
         default:
         {
             //std::cout << "UNKNOWN VAR" << std::endl;
-            return {{}, {}};
+            return {};
         }
     }
 }
@@ -311,7 +349,7 @@ void getTokenTree(std::vector<Node> tree){
         print(0, 0, tree);
         std::cout << std::endl;
     }
-    go(0, tree, -1);
+    go(0, -1, tree);
     std::cout << std::endl;
     exit(EXIT_SUCCESS);
 }
