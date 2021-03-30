@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/Users/Pro/Desktop/maffin/include/imports.h
+/home/arseniyx92/Desktop/c++/maffin/maffin/include/imports.h
 
-/Users/Pro/Desktop/maffin/include/parser.h
+/home/arseniyx92/Desktop/c++/maffin/maffin/include/parser.h
 token.h
-/Users/Pro/Desktop/maffin/include/token.h
+/home/arseniyx92/Desktop/c++/maffin/maffin/include/token.h
 
-/Users/Pro/Desktop/maffin/include/token.h
+/home/arseniyx92/Desktop/c++/maffin/maffin/include/token.h
 iostream
 -
 string
@@ -26,12 +26,14 @@ unordered_map
 vector
 -
 
-/Users/Pro/Desktop/maffin/parser.cpp
+/home/arseniyx92/Desktop/c++/maffin/maffin/parser.cpp
 include/parser.h
-/Users/Pro/Desktop/maffin/include/parser.h
+/home/arseniyx92/Desktop/c++/maffin/maffin/include/parser.h
 include/imports.h
-/Users/Pro/Desktop/maffin/include/imports.h
+/home/arseniyx92/Desktop/c++/maffin/maffin/include/imports.h
 iostream
+-
+cassert
 -
 unordered_map
 -

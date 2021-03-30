@@ -5,6 +5,7 @@
 #include "include/parser.h"
 #include "include/imports.h"
 #include <iostream>
+#include <cassert>
 #include <unordered_map>
 #include <unordered_set>
 #include <string>
@@ -49,12 +50,12 @@ std::unordered_map<std::string, long long> longintVars;
 //std::unordered_map<std::string, > hashMapVars;
 std::unordered_map<std::string, int> funcVars;
 
-void print(int v, const std::vector<Node>& tree){
+void print(int v, int p, const std::vector<Node>& tree){
     for (int i:tree[v].children){
-        print(i, tree);
+        print(i, p+1, tree);
         if (v == 0) std::cout << std::endl;
     }
-    std::cout << tree[v].val << ' ';
+    std::cout << tree[v].val << '(' << p << ')' << ' ';
 }
 
 void print_vals(const std::vector<std::string>& a){
@@ -307,7 +308,7 @@ std::pair<std::vector<std::string>, std::vector<std::string> > go(int v, std::ve
 
 void getTokenTree(std::vector<Node> tree){
     if (check_debug()){
-        print(0, tree);
+        print(0, 0, tree);
         std::cout << std::endl;
     }
     go(0, tree, -1);

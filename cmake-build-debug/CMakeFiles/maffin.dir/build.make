@@ -54,19 +54,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
+CMAKE_COMMAND = /home/arseniyx92/Downloads/CLion-2020.3.2/clion-2020.3.2/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
+RM = /home/arseniyx92/Downloads/CLion-2020.3.2/clion-2020.3.2/bin/cmake/linux/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/Pro/Desktop/maffin
+CMAKE_SOURCE_DIR = /home/arseniyx92/Desktop/c++/maffin/maffin
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/Pro/Desktop/maffin/cmake-build-debug
+CMAKE_BINARY_DIR = /home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/maffin.dir/depend.make
@@ -79,68 +79,68 @@ include CMakeFiles/maffin.dir/flags.make
 
 CMakeFiles/maffin.dir/main.cpp.o: CMakeFiles/maffin.dir/flags.make
 CMakeFiles/maffin.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/maffin.dir/main.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/main.cpp.o -c /Users/Pro/Desktop/maffin/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/maffin.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/main.cpp.o -c /home/arseniyx92/Desktop/c++/maffin/maffin/main.cpp
 
 CMakeFiles/maffin.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maffin.dir/main.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Pro/Desktop/maffin/main.cpp > CMakeFiles/maffin.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/arseniyx92/Desktop/c++/maffin/maffin/main.cpp > CMakeFiles/maffin.dir/main.cpp.i
 
 CMakeFiles/maffin.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maffin.dir/main.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Pro/Desktop/maffin/main.cpp -o CMakeFiles/maffin.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/arseniyx92/Desktop/c++/maffin/maffin/main.cpp -o CMakeFiles/maffin.dir/main.cpp.s
 
 CMakeFiles/maffin.dir/lexer.cpp.o: CMakeFiles/maffin.dir/flags.make
 CMakeFiles/maffin.dir/lexer.cpp.o: ../lexer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/maffin.dir/lexer.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/lexer.cpp.o -c /Users/Pro/Desktop/maffin/lexer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/maffin.dir/lexer.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/lexer.cpp.o -c /home/arseniyx92/Desktop/c++/maffin/maffin/lexer.cpp
 
 CMakeFiles/maffin.dir/lexer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maffin.dir/lexer.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Pro/Desktop/maffin/lexer.cpp > CMakeFiles/maffin.dir/lexer.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/arseniyx92/Desktop/c++/maffin/maffin/lexer.cpp > CMakeFiles/maffin.dir/lexer.cpp.i
 
 CMakeFiles/maffin.dir/lexer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maffin.dir/lexer.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Pro/Desktop/maffin/lexer.cpp -o CMakeFiles/maffin.dir/lexer.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/arseniyx92/Desktop/c++/maffin/maffin/lexer.cpp -o CMakeFiles/maffin.dir/lexer.cpp.s
 
 CMakeFiles/maffin.dir/token.cpp.o: CMakeFiles/maffin.dir/flags.make
 CMakeFiles/maffin.dir/token.cpp.o: ../token.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/maffin.dir/token.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/token.cpp.o -c /Users/Pro/Desktop/maffin/token.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/maffin.dir/token.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/token.cpp.o -c /home/arseniyx92/Desktop/c++/maffin/maffin/token.cpp
 
 CMakeFiles/maffin.dir/token.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maffin.dir/token.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Pro/Desktop/maffin/token.cpp > CMakeFiles/maffin.dir/token.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/arseniyx92/Desktop/c++/maffin/maffin/token.cpp > CMakeFiles/maffin.dir/token.cpp.i
 
 CMakeFiles/maffin.dir/token.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maffin.dir/token.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Pro/Desktop/maffin/token.cpp -o CMakeFiles/maffin.dir/token.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/arseniyx92/Desktop/c++/maffin/maffin/token.cpp -o CMakeFiles/maffin.dir/token.cpp.s
 
 CMakeFiles/maffin.dir/parser.cpp.o: CMakeFiles/maffin.dir/flags.make
 CMakeFiles/maffin.dir/parser.cpp.o: ../parser.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/maffin.dir/parser.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/parser.cpp.o -c /Users/Pro/Desktop/maffin/parser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/maffin.dir/parser.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/parser.cpp.o -c /home/arseniyx92/Desktop/c++/maffin/maffin/parser.cpp
 
 CMakeFiles/maffin.dir/parser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maffin.dir/parser.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Pro/Desktop/maffin/parser.cpp > CMakeFiles/maffin.dir/parser.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/arseniyx92/Desktop/c++/maffin/maffin/parser.cpp > CMakeFiles/maffin.dir/parser.cpp.i
 
 CMakeFiles/maffin.dir/parser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maffin.dir/parser.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Pro/Desktop/maffin/parser.cpp -o CMakeFiles/maffin.dir/parser.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/arseniyx92/Desktop/c++/maffin/maffin/parser.cpp -o CMakeFiles/maffin.dir/parser.cpp.s
 
 CMakeFiles/maffin.dir/imports.cpp.o: CMakeFiles/maffin.dir/flags.make
 CMakeFiles/maffin.dir/imports.cpp.o: ../imports.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/maffin.dir/imports.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/imports.cpp.o -c /Users/Pro/Desktop/maffin/imports.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/maffin.dir/imports.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maffin.dir/imports.cpp.o -c /home/arseniyx92/Desktop/c++/maffin/maffin/imports.cpp
 
 CMakeFiles/maffin.dir/imports.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maffin.dir/imports.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Pro/Desktop/maffin/imports.cpp > CMakeFiles/maffin.dir/imports.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/arseniyx92/Desktop/c++/maffin/maffin/imports.cpp > CMakeFiles/maffin.dir/imports.cpp.i
 
 CMakeFiles/maffin.dir/imports.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maffin.dir/imports.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Pro/Desktop/maffin/imports.cpp -o CMakeFiles/maffin.dir/imports.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/arseniyx92/Desktop/c++/maffin/maffin/imports.cpp -o CMakeFiles/maffin.dir/imports.cpp.s
 
 # Object files for target maffin
 maffin_OBJECTS = \
@@ -160,7 +160,7 @@ maffin: CMakeFiles/maffin.dir/parser.cpp.o
 maffin: CMakeFiles/maffin.dir/imports.cpp.o
 maffin: CMakeFiles/maffin.dir/build.make
 maffin: CMakeFiles/maffin.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable maffin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable maffin"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/maffin.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -173,6 +173,6 @@ CMakeFiles/maffin.dir/clean:
 .PHONY : CMakeFiles/maffin.dir/clean
 
 CMakeFiles/maffin.dir/depend:
-	cd /Users/Pro/Desktop/maffin/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/Pro/Desktop/maffin /Users/Pro/Desktop/maffin /Users/Pro/Desktop/maffin/cmake-build-debug /Users/Pro/Desktop/maffin/cmake-build-debug /Users/Pro/Desktop/maffin/cmake-build-debug/CMakeFiles/maffin.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/arseniyx92/Desktop/c++/maffin/maffin /home/arseniyx92/Desktop/c++/maffin/maffin /home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug /home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug /home/arseniyx92/Desktop/c++/maffin/maffin/cmake-build-debug/CMakeFiles/maffin.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/maffin.dir/depend
 

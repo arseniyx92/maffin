@@ -1,5 +1,7 @@
 ## MAFFIN
 
+![maffin.png](pictures/maffin.png)
+
 For looking at the structure beneath:
  `@debug`
 
@@ -55,4 +57,4 @@ RETURNS
 
 ### FUNNY THINGS
 
-![img.png](encoding_constant_into_variable.png)
+![encoding.png](pictures/encoding_constant_into_variable.png)
