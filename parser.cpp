@@ -1,6 +1,4 @@
-//
-// Created by Pro on 27/03/2021.
-//
+//INCLUDES
 
 #include "include/parser.h"
 #include "include/imports.h"
@@ -12,43 +10,74 @@
 #include <random>
 #include <ctime>
 
+//LANGUAGE VITAL FUNCTIONS
+
+std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars, std::vector<std::string>& output_vars){
+    int vertex_on_AST = func.get_vertex();
+    std::vector<std::string> variables = func.get_variables();
+    Scope scope;
+    variables.reserve(variables.size()+input_vars.size());
+    variables.insert(variables.end(), input_vars.begin(), input_vars.end());
+    for (const std::string& s:variables){
+        scope.VarsToType[s] = old_scope.VarsToType[s];
+        switch (scope.VarsToType[s].second) {
+            case 0: scope.intVars[s] = old_scope.intVars[s];
+            case 1: scope.longintVars[s] = old_scope.longintVars[s];
+            case 12: scope.funcVars[s] = old_scope.funcVars[s];
+            case 13: scope.doubleVars[s] = old_scope.doubleVars[s];
+        }
+    }
+    std::vector<std::string> output = go(vertex_on_AST, -1, tree, scope);
+    for (const std::string& s:input_vars){
+        if (old_scope.VarsToType[s].first == false) {
+            switch (scope.VarsToType[s].second) {
+                case 0:
+                    old_scope.intVars.erase(s);
+                case 1:
+                    old_scope.longintVars.erase(s);
+                case 12:
+                    old_scope.funcVars.erase(s);
+                case 13:
+                    old_scope.doubleVars.erase(s);
+            }
+            old_scope.VarsToType.erase(s);
+        }
+    }
+    std::string s = output.back();
+    old_scope.VarsToType[s] = scope.VarsToType[s];
+    switch (scope.VarsToType[s].second) {
+        case 0: old_scope.intVars[s] = scope.intVars[s];
+        case 1: old_scope.longintVars[s] = scope.longintVars[s];
+        case 12: old_scope.funcVars[s] = scope.funcVars[s];
+        case 13: old_scope.doubleVars[s] = scope.doubleVars[s];
+    }
+    return s;
+}
+
+//DEFINES
+
+#define vars tree[v].variables
+#define VarsToType scope.VarsToType
+#define intVars scope.intVars
+#define doubleVars scope.doubleVars
+#define longintVars scope.longintVars
+#define elongVars scope.elongVars
+#define charVars scope.charVars
+#define boolVars scope.boolVars
+#define stringVars scope.stringVars
+#define arrayVars scope.arrayVars
+#define listVars scope.listVars
+#define setVars scope.setVars
+#define mapVars scope.mapVars
+#define hashSetVars scope.hashSetVars
+#define hashMapVars scope.hashMapVars
+#define funcVars scope.funcVars
+
 std::unordered_set<std::string> BUILTIN = {
         "print"
 };
 
 std::mt19937 rnd(std::time(NULL));
-
-std::unordered_map<std::string, std::pair<bool, int> > VarsToType; // { name, {is var(true) or const(false), what type} }
-/*
-0 - int,
-1 - longint,
-2 - elong,
-3 - char,
-4 - bool,
-5 - string,
-6 - array,
-7 - list,
-8 - set, //splay tree
-9 - map, //splay tree
-10 - hashSet
-11 - hashMap
-12 - func //link to the tree Node
-13 - double
-*/
-std::unordered_map<std::string, int> intVars;
-std::unordered_map<std::string, long double> doubleVars;
-std::unordered_map<std::string, long long> longintVars;
-//std::unordered_map<std::string, > elongVars;
-//std::unordered_map<std::string, > charVars;
-//std::unordered_map<std::string, > boolVars;
-//std::unordered_map<std::string, > stringVars;
-//std::unordered_map<std::string, > arrayVars;
-//std::unordered_map<std::string, > listVars;
-//std::unordered_map<std::string, > setVars;
-//std::unordered_map<std::string, > mapVars;
-//std::unordered_map<std::string, > hashSetVars;
-//std::unordered_map<std::string, > hashMapVars;
-std::unordered_map<std::string, int> funcVars;
 
 void print(int v, int p, const std::vector<Node>& tree){
     for (int i:tree[v].children){
@@ -58,7 +87,7 @@ void print(int v, int p, const std::vector<Node>& tree){
     std::cout << tree[v].val << '(' << p << ')' << ' ';
 }
 
-void print_vals(const std::vector<std::string>& a){
+void print_vals(const std::vector<std::string>& a, Scope& scope){
     for (std::string x:a){
         switch(VarsToType[x].second){
             case 0:
@@ -76,12 +105,6 @@ void print_vals(const std::vector<std::string>& a){
     }
 }
 
-//@precision 9
-//
-//float lol=2.342;
-//print(lol);
-//~
-
 std::string genRndString(int len){
     std::string s = "+";
     for (int i = 0; i < len; ++i) {
@@ -90,14 +113,12 @@ std::string genRndString(int len){
     return s;
 }
 
-#define vars tree[v].variables
-
 //getting vector of constants and variables
-std::vector<std::string> go(int v, int p, std::vector<Node>& tree){
+std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope){
     for (int j = 0; j < tree[v].children.size(); ++j){
         int i = tree[v].children[j];
         std::vector<std::string> cur;
-        cur = go(i, v, tree);
+        cur = go(i, v, tree, scope);
         for (std::string x:cur)
             vars.push_back(x);
     }
@@ -321,7 +342,7 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree){
             }else if (tree[v].val == "("){
                 if (p != -1 && BUILTIN.find(tree[p].variables.back()) != BUILTIN.end()){
                     if (tree[p].variables.back() == "print"){
-                        print_vals(vars);
+                        print_vals(vars, scope);
                         std::cout << std::endl;
                     }
                 }else if (p != -1 && funcVars.count(tree[p].variables.back())){}
@@ -352,6 +373,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree){
             return {};
         }
     }
+    vars.clear();
+    vars.shrink_to_fit();
 }
 
 void getTokenTree(std::vector<Node> tree){
@@ -359,7 +382,8 @@ void getTokenTree(std::vector<Node> tree){
         print(0, 0, tree);
         std::cout << std::endl;
     }
-    go(0, -1, tree);
+    Scope scope;
+    go(0, -1, tree, scope);
     std::cout << std::endl;
     exit(EXIT_SUCCESS);
 }

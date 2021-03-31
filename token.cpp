@@ -166,5 +166,7 @@ void flood_of(){
     getTokenTree(tree);
     //clear memory
     rootsOfExpressions.clear();
+    rootsOfExpressions.shrink_to_fit();
     tree.clear();
+    tree.shrink_to_fit();
 }

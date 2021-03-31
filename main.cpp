@@ -30,3 +30,9 @@ int main(){
 //lol = lol + 5;
 //return 0;
 //}
+
+//@precision 9
+//
+//float lol=2.342;
+//print(lol);
+//~
