@@ -24,7 +24,7 @@ void carryToToken(lexer* lexer){
             if (ch == ' ') {
                 sendToToken(str);
                 str = "";
-            }else if (std::isalnum(ch) || std::isdigit(ch)){
+            }else if (std::isalnum(ch) || std::isdigit(ch) || (ch == '.' && str.length() != 0 && std::isdigit(str[0]))){
                 str += ch;
             }else{
                 sendToToken(str);

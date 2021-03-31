@@ -5,11 +5,6 @@
 
 #include "token.h"
 
-
-class parser {
-
-};
-
 //class function{
 //    void upload_into(const std::vector<std::string>& vars) {
 //        for (std::string s:vars)

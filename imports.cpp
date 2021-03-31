@@ -6,6 +6,7 @@
 
 
 bool debug = false;
+int precision = -1;
 
 void turn_on_debug(){
     debug = true;
@@ -14,3 +15,12 @@ void turn_on_debug(){
 bool check_debug(){
     return debug;
 }
+
+
+void set_precision(int x){
+    precision = x;
+}
+
+int get_precision(){
+    return precision;
+};

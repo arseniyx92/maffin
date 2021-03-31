@@ -11,6 +11,11 @@ int main(){
     while (std::cin >> s){
         if (s[0] == '@'){
             if (s == "@debug") turn_on_debug();
+            if (s == "@precision"){
+                int x;
+                std::cin >> x;
+                set_precision(x);
+            }
         }else {
             updateLexer(lex, s);
             carryToToken(lex);

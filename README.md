@@ -1,4 +1,4 @@
-## MAFFIN
+# MAFFIN
 
 ![maffin.png](pictures/maffin.png)
 

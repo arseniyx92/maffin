@@ -8,4 +8,7 @@
 void turn_on_debug();
 bool check_debug();
 
+void set_precision(int x);
+int get_precision();
+
 #endif //MAFFIN_IMPORTS_H

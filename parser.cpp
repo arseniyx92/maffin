@@ -68,11 +68,19 @@ void print_vals(const std::vector<std::string>& a){
                 std::cout << longintVars[x] << ' ';
                 break;
             case 13:
+                if (get_precision() != -1)
+                    std::cout.precision(get_precision());
                 std::cout << doubleVars[x] << ' ';
                 break;
         }
     }
 }
+
+//@precision 9
+//
+//float lol=2.342;
+//print(lol);
+//~
 
 std::string genRndString(int len){
     std::string s = "+";
@@ -245,12 +253,14 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree){
                         std::cout << "'-x' problem, 'x' is more than 1 variable" << std::endl;
                         assert(false);
                     }
-                    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//                    std::string s = genRndString(5);
-//                    VarsToType[s] = {false, VarsToType[vars.back()].second};
-//                    auto T = arr_from_type(VarsToType[vars.back()].second);
-//                    T[s] = stoi(tree[v].val);
-//                    return {s};
+                    std::string s = genRndString(5);
+                    VarsToType[s] = {false, VarsToType[vars.back()].second};
+                    switch (VarsToType[vars.back()].second){
+                        case 0: intVars[s] = -intVars[vars.back()];
+                        case 1: longintVars[s] = -longintVars[vars.back()];
+                        case 13: doubleVars[s] = -doubleVars[vars.back()];
+                    }
+                    return {s};
                 }
                 firstStr = tree[p].variables.back();
                 secondStr = vars.back();

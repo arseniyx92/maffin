@@ -24,7 +24,8 @@ public:
     int get_id(){
         return id;
     }
-    Token(): id(0){}
+    Token(): id(-1){}
+    Token(int id): id(id){}
 private:
     int id;
 };
