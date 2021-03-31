@@ -16,7 +16,7 @@ To compile text
 
 ## EXAMPLES
 
-###V 0.2 (float implemented and `@debug` changed)
+### V 0.2 (float implemented and `@debug` changed)
 
 ###### №1
 
@@ -38,7 +38,7 @@ RETURNS
     32.3423000000000016029844118748 
 ```
 
-###V 0.1
+### V 0.1
 
 ###### №1
 
