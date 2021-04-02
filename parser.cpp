@@ -79,22 +79,23 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
     //generating output
     if (!output.empty()) {
         std::string s = output.back();
-        old_scope.VarsToType[s] = scope.VarsToType[s];
+        std::string ns = genRndString(5);
+        old_scope.VarsToType[ns] = scope.VarsToType[s];
         switch (scope.VarsToType[s].second) {
             case 0:
-                old_scope.intVars[s] = scope.intVars[s];
+                old_scope.intVars[ns] = scope.intVars[s];
                 break;
             case 1:
-                old_scope.longintVars[s] = scope.longintVars[s];
+                old_scope.longintVars[ns] = scope.longintVars[s];
                 break;
             case 12:
-                old_scope.funcVars[s] = scope.funcVars[s];
+                old_scope.funcVars[ns] = scope.funcVars[s];
                 break;
             case 13:
-                old_scope.doubleVars[s] = scope.doubleVars[s];
+                old_scope.doubleVars[ns] = scope.doubleVars[s];
                 break;
         }
-        return s;
+        return ns;
     }
     return "";
 }
@@ -457,6 +458,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     }
                 }else if (p != -1 && funcVars.count(tree[p].variables.back())){
                     std::string result = {execute_function(funcVars[tree[p].variables.back()], tree, scope, vars)};
+                    tree[p].variables.pop_back();
                     vars.clear();
                     vars.shrink_to_fit();
                     return {result};
@@ -516,3 +518,29 @@ void getTokenTree(std::vector<Node> tree){
 
 //int ghjtj = 7+8-1;
 //ghjtj = 9+ghjtj;
+
+//func lol {
+//        a = a + 3;
+//        return a;
+//}
+//
+//int a = 2;
+//lol(a);
+//lol(a);
+//print(a);
+//~
+
+//int glob = 3;
+//
+//func f
+//        {
+//                int new = u + 5;
+//        return glob-new;
+//        }
+//
+//int u = 50;
+//print(f(u));
+//print(u);
+//u = f(u);
+//print(u);
+//~

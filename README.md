@@ -63,7 +63,8 @@ RETURNS
     
     int a = 2;
     lol(a);
-    lol(a);
+    print(a);
+    a = lol(a);
     print(a);
     ~
 ```
@@ -71,7 +72,8 @@ RETURNS
 RETURNS
 
 ```c
-    8
+    2
+    5
 ```
 
 ###### №3
