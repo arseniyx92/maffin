@@ -16,6 +16,74 @@ To compile text
 
 ## EXAMPLES
 
+### V 0.3 (function implemented)
+
+###### №1
+
+```asm
+    func lol {
+        return 32+2;
+    }
+    
+    print(lol());
+    ~
+```
+
+RETURNS
+
+```c
+    34
+```
+
+###### №2
+
+```asm
+    func lol {
+        a = a + 3;
+        return a;
+    }
+    
+    int a = 2;
+    lol(a);
+    lol(a);
+    print(a);
+    ~
+```
+
+RETURNS
+
+```c
+    8
+```
+
+###### №3
+
+```asm
+    int kek = 100;
+    
+    func lol {
+        kek = kek + 1;
+        a = a + 1;
+        return 5;
+    }
+    
+    int a = 3;
+    print(lol(a));
+    print(kek);
+    print(a);
+    ~
+```
+
+RETURNS
+
+```c
+    5
+    101
+    3
+```
+As you can see, `a` variable hasn't changed because it was not in global scope,
+to apply to `a` all alterations it should be coded `a = lol(a);`
+
 ### V 0.2 (float implemented and `@debug` changed)
 
 ###### №1

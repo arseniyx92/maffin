@@ -1,5 +1,5 @@
-@debug
-
-print(2);
-
-~
+func main{
+    int lol = 5;
+    lol = lol + 5;
+    return 0;
+}

@@ -25,10 +25,11 @@ std::unordered_map<char, int> SPECIAL_CHARACTERS = { // MAYBE SET INSTEAD OF MAP
     {'~', GLOBAL_SCOPE}
 };
 
-Token function_token(12), int32_token(0), int64_token(1), unsigned_token(-1), elong_token(-1), float_token(13);
+Token function_token(12), int32_token(0), int64_token(1), unsigned_token(-1), elong_token(-1), float_token(13), return_token(100);
 
 std::unordered_map<std::string, Token> KEY_WORDS = {
         {"func", function_token},
+        {"return", return_token},
         {"int", int32_token},
         {"longint", int64_token},
         {"elong", elong_token},

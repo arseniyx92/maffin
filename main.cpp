@@ -5,7 +5,16 @@
 #include "include/imports.h"
 
 int main(){
-//    std::ifstream cin("example/eg.txt");
+//    std::string filepath;
+//    std::cout << "Enter filepath:" << std::endl;
+//    std::cin >> filepath;
+//    std::fstream file;
+//    file.open(filepath);
+//    if (!file.is_open()){
+//        std::cout << "ERROR: no file with such filepath" << std::endl;
+//        return 0;
+//    }
+//    file.close();
     std::string s;
     lexer* lex = initLexer("");
     while (std::cin >> s){

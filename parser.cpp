@@ -12,51 +12,97 @@
 
 //LANGUAGE VITAL FUNCTIONS
 
-std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars, std::vector<std::string>& output_vars){
+std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars){
     int vertex_on_AST = func.get_vertex();
     std::vector<std::string> variables = func.get_variables();
+    //uploading scope
     Scope scope;
     variables.reserve(variables.size()+input_vars.size());
     variables.insert(variables.end(), input_vars.begin(), input_vars.end());
     for (const std::string& s:variables){
         scope.VarsToType[s] = old_scope.VarsToType[s];
         switch (scope.VarsToType[s].second) {
-            case 0: scope.intVars[s] = old_scope.intVars[s];
-            case 1: scope.longintVars[s] = old_scope.longintVars[s];
-            case 12: scope.funcVars[s] = old_scope.funcVars[s];
-            case 13: scope.doubleVars[s] = old_scope.doubleVars[s];
+            case 0:
+                scope.intVars[s] = old_scope.intVars[s];
+                break;
+            case 1:
+                scope.longintVars[s] = old_scope.longintVars[s];
+                break;
+            case 12:
+                scope.funcVars[s] = old_scope.funcVars[s];
+                break;
+            case 13:
+                scope.doubleVars[s] = old_scope.doubleVars[s];
+                break;
         }
     }
-    std::vector<std::string> output = go(vertex_on_AST, -1, tree, scope);
+    //executing
+    std::vector<std::string> output = go(vertex_on_AST, -1, 0, tree, scope);
+    //deleting constants
     for (const std::string& s:input_vars){
         if (old_scope.VarsToType[s].first == false) {
             switch (scope.VarsToType[s].second) {
                 case 0:
                     old_scope.intVars.erase(s);
+                    break;
                 case 1:
                     old_scope.longintVars.erase(s);
+                    break;
                 case 12:
                     old_scope.funcVars.erase(s);
+                    break;
                 case 13:
                     old_scope.doubleVars.erase(s);
+                    break;
             }
             old_scope.VarsToType.erase(s);
         }
     }
-    std::string s = output.back();
-    old_scope.VarsToType[s] = scope.VarsToType[s];
-    switch (scope.VarsToType[s].second) {
-        case 0: old_scope.intVars[s] = scope.intVars[s];
-        case 1: old_scope.longintVars[s] = scope.longintVars[s];
-        case 12: old_scope.funcVars[s] = scope.funcVars[s];
-        case 13: old_scope.doubleVars[s] = scope.doubleVars[s];
+    //updating global scope variables
+    std::vector<std::string> initial_variables = func.get_variables();
+    for (const std::string& s:initial_variables){
+        switch (scope.VarsToType[s].second) {
+            case 0:
+                old_scope.intVars[s] = scope.intVars[s];
+                break;
+            case 1:
+                old_scope.longintVars[s] = scope.longintVars[s];
+                break;
+            case 12:
+                old_scope.funcVars[s] = scope.funcVars[s];
+                break;
+            case 13:
+                old_scope.doubleVars[s] = scope.doubleVars[s];
+                break;
+        }
     }
-    return s;
+    //generating output
+    if (!output.empty()) {
+        std::string s = output.back();
+        old_scope.VarsToType[s] = scope.VarsToType[s];
+        switch (scope.VarsToType[s].second) {
+            case 0:
+                old_scope.intVars[s] = scope.intVars[s];
+                break;
+            case 1:
+                old_scope.longintVars[s] = scope.longintVars[s];
+                break;
+            case 12:
+                old_scope.funcVars[s] = scope.funcVars[s];
+                break;
+            case 13:
+                old_scope.doubleVars[s] = scope.doubleVars[s];
+                break;
+        }
+        return s;
+    }
+    return "";
 }
 
 //DEFINES
 
 #define vars tree[v].variables
+#define finished scope.finished
 #define VarsToType scope.VarsToType
 #define intVars scope.intVars
 #define doubleVars scope.doubleVars
@@ -113,25 +159,43 @@ std::string genRndString(int len){
     return s;
 }
 
-//getting vector of constants and variables
-std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope){
+std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope){
     for (int j = 0; j < tree[v].children.size(); ++j){
         int i = tree[v].children[j];
+        if (tree[i].val == "{"){
+            if (j == 0 || tree[tree[v].children[j-1]].id != 0){
+                std::cout << "FATAL: '{' not expected" << std::endl;
+                assert(false);
+            }
+            continue;
+        }
         std::vector<std::string> cur;
-        cur = go(i, v, tree, scope);
+        cur = go(i, v, j, tree, scope);
         for (std::string x:cur)
             vars.push_back(x);
+        if (finished){
+            if (p != -1){
+                tree[p].variables.clear();
+                tree[p].variables.shrink_to_fit();
+            }
+            std::string result = vars[0];
+            vars.clear();
+            vars.shrink_to_fit();
+            return {result};
+        }
     }
     switch (tree[v].id){
         case 0:
         {
             if (vars.size() != 1) assert(false); // SHOULD BE CHANGED TO MULTIPLE DECLARATION
-            if (VarsToType.count(vars[0])){ // IF ALREADY EXISTS
+            if ((stoi(tree[v].val) < 100) && (VarsToType.count(vars[0]))){ // IF ALREADY EXISTS
                 std::cout << "FATAL: " << vars[0] <<  " ALREADY EXISTS" << std::endl;
                 assert(false);
             }
-            VarsToType[vars[0]].second = stoi(tree[v].val);
-            VarsToType[vars[0]].first = true;
+            if (stoi(tree[v].val) < 100) {
+                VarsToType[vars[0]].second = stoi(tree[v].val);
+                VarsToType[vars[0]].first = true;
+            }
             switch (stoi(tree[v].val)){
                 case 0:
                 {
@@ -148,10 +212,37 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                     doubleVars[vars[0]] = 0.;
                     break;
                 }
+                case 12:
+                {
+                    if (tree[p].children.size() <= what_child+1){
+                        std::cout << "FATAL: '{' Expected" << std::endl;
+                        assert(false);
+                    }
+                    funcVars[vars.back()] = Function();
+                    std::vector<std::string> a;
+                    a.reserve(VarsToType.size());
+                    for (const auto& s:VarsToType)
+                        if (s.first != vars.back()) a.push_back(s.first);
+                    funcVars[vars.back()].upload_into(tree[p].children[what_child+1], a);
+                    break;
+                }
+                case 100:
+                {
+                    finished = true;
+                    tree[p].variables.clear();
+                    tree[p].variables.shrink_to_fit();
+                    std::string result = vars[0];
+                    vars.clear();
+                    vars.shrink_to_fit();
+                    return {result};
+                }
                 default:
                     assert(false);
             }
-            return {vars[0]};
+            std::string result = vars[0];
+            vars.clear();
+            vars.shrink_to_fit();
+            return {result};
         }
         case 1:
         {
@@ -193,6 +284,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                     VarsToType.erase(vars[0]);
                     intVars.erase(vars[0]);
                 }
+                vars.clear();
+                vars.shrink_to_fit();
                 return {};
             }else if (tree[v].val == "+"){
                 std::string firstStr, secondStr;
@@ -205,7 +298,10 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::cout << "'+x' problem, 'x' is more than 1 variable" << std::endl;
                         assert(false);
                     }
-                    return {vars.back()};
+                    std::string result = vars.back();
+                    vars.clear();
+                    vars.shrink_to_fit();
+                    return {result};
                 }
                 firstStr = vars.back();
                 secondStr = tree[p].variables.back();
@@ -226,6 +322,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         intVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
                         return {s};
                     }
                     case 1:
@@ -242,6 +340,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         longintVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
                         return {s};
                     }
                     case 13:
@@ -258,6 +358,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         doubleVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
                         return {s};
                     }
                     default:
@@ -281,6 +383,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         case 1: longintVars[s] = -longintVars[vars.back()];
                         case 13: doubleVars[s] = -doubleVars[vars.back()];
                     }
+                    vars.clear();
+                    vars.shrink_to_fit();
                     return {s};
                 }
                 firstStr = tree[p].variables.back();
@@ -302,6 +406,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         intVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
                         return {s};
                     }
                     case 1:
@@ -318,6 +424,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         longintVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
                         return {s};
                     }
                     case 13:
@@ -334,6 +442,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         doubleVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
                         return {s};
                     }
                     default:
@@ -345,8 +455,16 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
                         print_vals(vars, scope);
                         std::cout << std::endl;
                     }
-                }else if (p != -1 && funcVars.count(tree[p].variables.back())){}
-                return vars;
+                }else if (p != -1 && funcVars.count(tree[p].variables.back())){
+                    std::string result = {execute_function(funcVars[tree[p].variables.back()], tree, scope, vars)};
+                    vars.clear();
+                    vars.shrink_to_fit();
+                    return {result};
+                }
+                std::vector<std::string> local = vars;
+                vars.clear();
+                vars.shrink_to_fit();
+                return local;
             }
         }
         case 2:
@@ -354,6 +472,8 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
             std::string s = genRndString(5);
             VarsToType[s] = {false, 0};
             intVars[s] = stoi(tree[v].val);
+            vars.clear();
+            vars.shrink_to_fit();
             return {s};
         }
         case 3:
@@ -361,15 +481,21 @@ std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope)
             std::string s = genRndString(5);
             VarsToType[s] = {false, 13};
             doubleVars[s] = stod(tree[v].val);
+            vars.clear();
+            vars.shrink_to_fit();
             return {s};
         }
         case 4:
         {
+            vars.clear();
+            vars.shrink_to_fit();
             return {tree[v].val};
         }
         default:
         {
             //std::cout << "UNKNOWN VAR" << std::endl;
+            vars.clear();
+            vars.shrink_to_fit();
             return {};
         }
     }
@@ -383,7 +509,7 @@ void getTokenTree(std::vector<Node> tree){
         std::cout << std::endl;
     }
     Scope scope;
-    go(0, -1, tree, scope);
+    go(0, -1, 0, tree, scope);
     std::cout << std::endl;
     exit(EXIT_SUCCESS);
 }

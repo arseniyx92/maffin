@@ -19,11 +19,17 @@ void get_keyword(Token token){
     cur_cmd.push_back({0, std::to_string(token.get_id())});
 }
 
+bool expect_curly = false;
 void get_special_character(char ch){
     std::string s = "";
     s += ch;
     cur_cmd.push_back({1, s});
-    if (ch == ';') run_row();
+    if (ch == '{') expect_curly = true;
+    if (ch == '}'){
+        expect_curly = false;
+        run_row();
+    }
+    if (ch == ';' && !expect_curly) run_row();
     if (ch == '~') flood_of();
 }
 
@@ -50,6 +56,7 @@ void get_variables(std::string var){
 }
 
 void run_row(){
+    bool in_curly = false;
     bool in_chain = false;
     int cur_root = cnt;
     tree[rootsOfExpressions.back()].children.push_back(cnt);
@@ -68,13 +75,18 @@ void run_row(){
             case 0:
             {
                 if (in_chain) assert(false);
-                tree.push_back(Node(x.first, x.second));
-                tree[rootsOfExpressions.back()].children.push_back(cnt);
-                tree.back().children.push_back(cnt+1);
-                in_chain = true;
-                cnt++;
-                expectations = {4};
-                if (stoi(x.second) < 10) expectations.push_back(0);
+                if (stoi(x.second) >= 100){
+                    tree.back() = Node(x.first, x.second);
+                    expectations = {0, 1, 2, 3, 4};
+                }else {
+                    tree.push_back(Node(x.first, x.second));
+                    tree[rootsOfExpressions.back()].children.push_back(cnt);
+                    tree.back().children.push_back(cnt + 1);
+                    in_chain = true;
+                    cnt++;
+                    expectations = {4};
+//                  if (stoi(x.second) < 10) expectations.push_back(0);
+                }
                 break;
             }
             case 1:
@@ -84,6 +96,14 @@ void run_row(){
                     if (tree[rootsOfExpressions.back()].val == "=") rootsOfExpressions.pop_back();
                     if (rootsOfExpressions.back() != cur_root) assert(false);
                     rootsOfExpressions.pop_back();
+                    if (in_curly){
+                        cur_root = cnt;
+                        tree[rootsOfExpressions.back()].children.push_back(cnt);
+                        tree.push_back(Node(ROW_SCOPE, ""));
+                        rootsOfExpressions.push_back(cnt);
+                        cnt++;
+                        expectations = {0, 1, 2, 3, 4};
+                    }
                     break;
                 }
                 if (x.second == "(" || x.second == "[" || x.second == "{"){
@@ -92,14 +112,31 @@ void run_row(){
                     else tree[rootsOfExpressions.back()].children.push_back(cnt);
                     rootsOfExpressions.push_back(cnt);
                     cnt++;
+                    if (x.second == "{"){
+                        in_curly = true;
+                        cur_root = cnt;
+                        tree[rootsOfExpressions.back()].children.push_back(cnt);
+                        tree.push_back(Node(ROW_SCOPE, ""));
+                        rootsOfExpressions.push_back(cnt);
+                        cnt++;
+                    }
                 }else if(x.second == ")" || x.second == "]" || x.second == "}"){
                     if (in_chain) assert(false);
                     if (tree[rootsOfExpressions.back()].val == "=") rootsOfExpressions.pop_back();
                     if ((x.second == ")" && tree[rootsOfExpressions.back()].val == "(") ||
                         (x.second == "]" && tree[rootsOfExpressions.back()].val == "[") ||
-                        (x.second == "}" && tree[rootsOfExpressions.back()].val == "{")){
+                        (x.second == "}" && rootsOfExpressions.size() > 1 && tree[rootsOfExpressions[rootsOfExpressions.size()-2]].val == "{")){
                         rootsOfExpressions.pop_back();
+                        if (x.second == "}" && in_curly){
+                            in_curly = false;
+                            tree[rootsOfExpressions.back()].children.pop_back();
+                            tree.pop_back();
+                            cnt--;
+                            rootsOfExpressions.pop_back();
+                            cur_root = rootsOfExpressions.back();
+                        }
                     }else{
+                        std::cout << tree[rootsOfExpressions.back()].val << " expected, but " << x.second << " recognized" << std::endl;
                         assert(false);
                     }
                 }else if (x.second == "="){
@@ -116,7 +153,7 @@ void run_row(){
                     in_chain = true;
                     cnt++;
                 }
-                expectations = {1, 2, 3, 4};
+                expectations = {0, 1, 2, 3, 4};
                 break;
             }
             case 2:
@@ -165,6 +202,7 @@ void run_row(){
 void flood_of(){
     getTokenTree(tree);
     //clear memory
+    cur_cmd.shrink_to_fit();
     rootsOfExpressions.clear();
     rootsOfExpressions.shrink_to_fit();
     tree.clear();

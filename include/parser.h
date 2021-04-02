@@ -12,7 +12,7 @@ public:
         for (std::string s:vars)
             variables.push_back(s);
     }
-    int get_vertex(){
+    int get_vertex() const{
         return vertex_on_AST;
     }
     std::vector<std::string> get_variables(){
@@ -25,8 +25,10 @@ private:
 
 class Scope{
 public:
+    bool finished = false;
     std::unordered_map<std::string, std::pair<bool, int> > VarsToType; // { name, {is var(true) or const(false), what type} }
     /*
+    ------TYPES------
     0 - int,
     1 - longint,
     2 - elong,
@@ -41,6 +43,9 @@ public:
     11 - hashMap
     12 - func
     13 - double
+
+    ------KEY_WORDS------
+    100 - return
     */
     std::unordered_map<std::string, int> intVars;
     std::unordered_map<std::string, long double> doubleVars;
@@ -58,11 +63,11 @@ public:
     std::unordered_map<std::string, Function> funcVars;
 };
 
-void print(int v, const std::vector<Node>& tree);
-void print_vals(const std::vector<std::string>& a);
+void print(int v, int p, const std::vector<Node>& tree);
+void print_vals(const std::vector<std::string>& a, Scope& scope);
 std::string genRndString(int len);
-std::vector<std::string> go(int v, int p, std::vector<Node>& tree, Scope& scope);
+std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope);
 void getTokenTree(std::vector<Node> tree);
-std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars, std::vector<std::string>& output_vars);
+std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars);
 
 #endif //MAFFIN_PARSER_H
