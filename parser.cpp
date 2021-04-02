@@ -58,7 +58,7 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
             old_scope.VarsToType.erase(s);
         }
     }
-    //updating global scope variables
+    //updating global scope variables (TODO: change stupid assignment of each element to something smarter)
     std::vector<std::string> initial_variables = func.get_variables();
     for (const std::string& s:initial_variables){
         switch (scope.VarsToType[s].second) {
@@ -222,7 +222,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     std::vector<std::string> a;
                     a.reserve(VarsToType.size());
                     for (const auto& s:VarsToType)
-                        if (s.first != vars.back()) a.push_back(s.first);
+                        a.push_back(s.first);
                     funcVars[vars.back()].upload_into(tree[p].children[what_child+1], a);
                     break;
                 }

@@ -16,6 +16,24 @@ To compile text
 
 ## EXAMPLES
 
+### V 0.35 (recursion added)
+
+```asm
+    func rec{
+        a = a + 1;
+        rec(a);
+        return a;
+    }
+    
+    int a = 3;
+    rec(a);
+    ~
+```
+
+RETURNS
+
+nothing because infinite recursion
+
 ### V 0.3 (function implemented)
 
 ###### №1
