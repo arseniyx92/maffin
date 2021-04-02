@@ -453,6 +453,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
             }else if (tree[v].val == "("){
                 if (p != -1 && BUILTIN.find(tree[p].variables.back()) != BUILTIN.end()){
                     if (tree[p].variables.back() == "print"){
+                        tree[p].variables.pop_back();
                         print_vals(vars, scope);
                         std::cout << std::endl;
                     }

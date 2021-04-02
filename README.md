@@ -104,6 +104,21 @@ RETURNS
 As you can see, `a` variable hasn't changed because it was not in global scope,
 to apply to `a` all alterations it should be coded `a = lol(a);`
 
+###### №3
+
+```asm
+    int a = print(3);
+    print(a);
+    ~
+```
+
+RETURNS
+
+```c
+    3
+    3
+```
+
 ### V 0.2 (float implemented and `@debug` changed)
 
 ###### №1
