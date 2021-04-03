@@ -17,8 +17,16 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
     std::vector<std::string> variables = func.get_variables();
     //uploading scope
     Scope scope;
-    variables.reserve(variables.size()+input_vars.size());
-    variables.insert(variables.end(), input_vars.begin(), input_vars.end());
+    std::vector<std::string> input_consts;
+    input_consts.reserve(input_vars.size());
+    array Args = array(input_vars.size());
+    for (int i = 0; i < input_vars.size(); ++i){
+        std::string ns = copy_to_const(input_vars[i], old_scope);
+        Args.set_value(ns, i);
+        input_consts.push_back(ns);
+    }
+    variables.reserve(variables.size()+input_consts.size());
+    variables.insert(variables.end(), input_consts.begin(), input_consts.end());
     for (const std::string& s:variables){
         scope.VarsToType[s] = old_scope.VarsToType[s];
         switch (scope.VarsToType[s].second) {
@@ -36,12 +44,20 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
                 break;
         }
     }
+    if (scope.VarsToType.find("Args") != scope.VarsToType.end()){
+        std::cout << "FATAL: using prohibited 'Args' variable that is already reserved" << std::endl;
+        assert(false);
+    }
+    scope.VarsToType["Args"] = {true, 6};
+    scope.arrayVars["Args"] = Args;
     //executing
     std::vector<std::string> output = go(vertex_on_AST, -1, 0, tree, scope);
     //deleting constants
-    for (const std::string& s:input_vars){
+    input_vars.reserve(input_vars.size()+input_consts.size());
+    input_vars.insert(input_vars.end(), input_consts.begin(), input_consts.end());
+    for (const std::string& s : input_vars){
         if (old_scope.VarsToType[s].first == false) {
-            switch (scope.VarsToType[s].second) {
+            switch (old_scope.VarsToType[s].second) {
                 case 0:
                     old_scope.intVars.erase(s);
                     break;
@@ -492,7 +508,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                                     std::cout << "FATAL: Trying to change in " << tree[p].variables.back() << " array non 'int' index" << std::endl;
                                     assert(false);
                                 }
-                                arrayVars[vars[0]].set_value(vars[1], intVars[vars[2]]);
+                                std::string ns = copy_to_const(vars[1], scope);
+                                arrayVars[vars[0]].set_value(ns, intVars[vars[2]]);
+//                                arrayVars[vars[0]].set_value(vars[1], intVars[vars[2]]);
                             }
                         }
                         //clear cash TODO
@@ -535,6 +553,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     }
                 }else if (p != -1 && funcVars.count(tree[p].variables.back())){
                     std::string result = {execute_function(funcVars[tree[p].variables.back()], tree, scope, vars)};
+                    tree[p].variables.pop_back();
                     vars.clear();
                     vars.shrink_to_fit();
                     return {result};

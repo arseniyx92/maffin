@@ -16,6 +16,29 @@ To compile text
 
 ## EXAMPLES
 
+### V 0.45 (function arguments now in the array system)
+
+It's little bit complicated thing, the point is that all the arguments
+of the function are represented as an `Args` array, so when you are passing
+any argument, to access them type `get(Args, 'index' )`, where `'index'`
+is an `int` value.
+
+###### №1
+
+```asm
+    func lol{
+        return get(Args, 0)+5;
+    }
+    print(lol(9));
+    ~
+```
+
+RETURNS
+
+```c
+    14
+```
+
 ### V 0.4 (arrays implemented)
 
 ###### №1
@@ -32,6 +55,51 @@ RETURNS
 
 ```c
     100
+```
+
+###### №2
+
+```asm
+    int glob = 10;
+
+    func f
+    {
+        int u = get(Args, 0);
+        int v = get(Args, 1);
+        glob = glob + u + v;
+        return 0;
+    }
+
+    print(f(5, 9));
+    print(glob);
+    ~
+```
+
+RETURNS
+
+```c
+    0
+    24
+```
+
+###### №3 FUN FACT
+
+Here is no function with name `lol`, so it's just generating a container
+of variables.
+
+```asm
+    print(lol(5, 9));
+    print(5, 9);
+    print((5, 9));
+    ~
+```
+
+RETURNS
+
+```c
+    5 9
+    5 9
+    exit code 139 (interrupted by signal 11: SIGSEGV)
 ```
 
 ### V 0.35 (recursion added)

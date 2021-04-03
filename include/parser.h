@@ -67,6 +67,7 @@ public:
 void print(int v, int p, const std::vector<Node>& tree);
 void print_vals(const std::vector<std::string>& a, Scope& scope);
 std::string genRndString(int len);
+std::string copy_to_const(std::string s, Scope& scope);
 std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope);
 void getTokenTree(std::vector<Node> tree);
 std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars);
