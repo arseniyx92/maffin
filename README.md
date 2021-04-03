@@ -39,24 +39,6 @@ RETURNS
     14
 ```
 
-### V 0.4 (arrays implemented)
-
-###### №1
-
-```asm
-    array a[30];
-    set(a, 100, 3);
-    int lol = get(a, 3);
-    print(lol);
-    ~
-```
-
-RETURNS
-
-```c
-    100
-```
-
 ###### №2
 
 ```asm
@@ -99,7 +81,25 @@ RETURNS
 ```c
     5 9
     5 9
-    exit code 139 (interrupted by signal 11: SIGSEGV)
+    5 9
+```
+
+### V 0.4 (arrays implemented)
+
+###### №1
+
+```asm
+    array a[30];
+    set(a, 100, 3);
+    int lol = get(a, 3);
+    print(lol);
+    ~
+```
+
+RETURNS
+
+```c
+    100
 ```
 
 ### V 0.35 (recursion added)

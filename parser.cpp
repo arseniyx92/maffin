@@ -492,7 +492,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         assert(false);
                 }
             }else if (tree[v].val == "("){
-                if (p != -1 && BUILTIN.find(tree[p].variables.back()) != BUILTIN.end()){
+                if (p != -1 && !tree[p].variables.empty() && BUILTIN.find(tree[p].variables.back()) != BUILTIN.end()){
                     if (tree[p].variables.back() == "print"){
                         print_vals(vars, scope);
                         std::cout << std::endl;
@@ -551,14 +551,14 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         intVars[s] = size;
                         vars = {s};
                     }
-                }else if (p != -1 && funcVars.count(tree[p].variables.back())){
+                    tree[p].variables.pop_back();
+                }else if (p != -1 && !tree[p].variables.empty() && funcVars.count(tree[p].variables.back())){
                     std::string result = {execute_function(funcVars[tree[p].variables.back()], tree, scope, vars)};
                     tree[p].variables.pop_back();
                     vars.clear();
                     vars.shrink_to_fit();
                     return {result};
                 }
-                tree[p].variables.pop_back();
                 std::vector<std::string> local = vars;
                 vars.clear();
                 vars.shrink_to_fit();
