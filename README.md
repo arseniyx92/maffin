@@ -79,7 +79,7 @@ of variables.
 RETURNS
 
 ```c
-    5 9
+    0 5 9
     5 9
     5 9
 ```
