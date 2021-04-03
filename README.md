@@ -16,6 +16,24 @@ To compile text
 
 ## EXAMPLES
 
+### V 0.4 (arrays implemented)
+
+###### №1
+
+```asm
+    array a[30];
+    set(a, 100, 3);
+    int lol = get(a, 3);
+    print(lol);
+    ~
+```
+
+RETURNS
+
+```c
+    100
+```
+
 ### V 0.35 (recursion added)
 
 ```asm
@@ -104,7 +122,7 @@ RETURNS
 As you can see, `a` variable hasn't changed because it was not in global scope,
 to apply to `a` all alterations it should be coded `a = lol(a);`
 
-###### №3
+###### №4
 
 ```asm
     int a = print(3);

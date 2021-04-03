@@ -91,6 +91,10 @@ void run_row(){
             }
             case 1:
             {
+                if (x.second == ","){
+                    expectations = {0, 1, 2, 3, 4};
+                    break;
+                }
                 if (x.second == ";"){
                     if (in_chain) assert(false);
                     if (tree[rootsOfExpressions.back()].val == "=") rootsOfExpressions.pop_back();

@@ -9,7 +9,7 @@
 #include <string>
 #include <random>
 #include <ctime>
-
+// TODO cash clearer
 //LANGUAGE VITAL FUNCTIONS
 
 std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars){
@@ -100,6 +100,26 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
     return "";
 }
 
+std::string copy_to_const(std::string s, Scope& scope){
+    std::string ns = genRndString(5);
+    scope.VarsToType[ns] = scope.VarsToType[s];
+    switch (scope.VarsToType[s].second) {
+        case 0:
+            scope.intVars[ns] = scope.intVars[s];
+            break;
+        case 1:
+            scope.longintVars[ns] = scope.longintVars[s];
+            break;
+        case 12:
+            scope.funcVars[ns] = scope.funcVars[s];
+            break;
+        case 13:
+            scope.doubleVars[ns] = scope.doubleVars[s];
+            break;
+    }
+    return ns;
+}
+
 //DEFINES
 
 #define vars tree[v].variables
@@ -121,7 +141,7 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
 #define funcVars scope.funcVars
 
 std::unordered_set<std::string> BUILTIN = {
-        "print"
+        "print", "set", "get", "sizeof"
 };
 
 std::mt19937 rnd(std::time(NULL));
@@ -206,6 +226,11 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 case 1:
                 {
                     longintVars[vars[0]] = 0;
+                    break;
+                }
+                case 6:
+                {
+                    arrayVars[vars[0]] = array();
                     break;
                 }
                 case 13:
@@ -453,21 +478,83 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
             }else if (tree[v].val == "("){
                 if (p != -1 && BUILTIN.find(tree[p].variables.back()) != BUILTIN.end()){
                     if (tree[p].variables.back() == "print"){
-                        tree[p].variables.pop_back();
                         print_vals(vars, scope);
                         std::cout << std::endl;
+                    }else if (tree[p].variables.back() == "set"){
+                        switch (VarsToType[vars[0]].second){
+                            case 6:
+                            {
+                                if (vars.size() != 3){
+                                    std::cout << "FATAL: Incorrect number of parameters in SET function" << std::endl;
+                                    assert(false);
+                                }
+                                if (VarsToType[vars[2]].second != 0){
+                                    std::cout << "FATAL: Trying to change in " << tree[p].variables.back() << " array non 'int' index" << std::endl;
+                                    assert(false);
+                                }
+                                arrayVars[vars[0]].set_value(vars[1], intVars[vars[2]]);
+                            }
+                        }
+                        //clear cash TODO
+                        vars = {};
+                    }else if (tree[p].variables.back() == "get"){
+                        std::string s;
+                        switch (VarsToType[vars[0]].second){
+                            case 6:
+                            {
+                                if (vars.size() != 2){
+                                    std::cout << "FATAL: Incorrect number of parameters in GET function" << std::endl;
+                                    assert(false);
+                                }
+                                if (VarsToType[vars[1]].second != 0){
+                                    std::cout << "FATAL: Trying to get from " << tree[p].variables.back() << " array element with non 'int' index" << std::endl;
+                                    assert(false);
+                                }
+                                s = arrayVars[vars[0]].get_value(intVars[vars[1]]);
+                            }
+                        }
+                        //clear cash TODO
+                        std::string ns = copy_to_const(s, scope);
+                        vars = {ns};
+                    }else if (tree[p].variables.back() == "sizeof"){
+                        int size;
+                        switch (VarsToType[vars[0]].second){
+                            case 6:
+                            {
+                                if (vars.size() != 1){
+                                    std::cout << "FATAL: Incorrect number of parameters in SIZEOF function" << std::endl;
+                                    assert(false);
+                                }
+                                size = arrayVars[vars[0]].get_size();
+                            }
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 0};
+                        intVars[s] = size;
+                        vars = {s};
                     }
                 }else if (p != -1 && funcVars.count(tree[p].variables.back())){
                     std::string result = {execute_function(funcVars[tree[p].variables.back()], tree, scope, vars)};
-                    tree[p].variables.pop_back();
                     vars.clear();
                     vars.shrink_to_fit();
                     return {result};
                 }
+                tree[p].variables.pop_back();
                 std::vector<std::string> local = vars;
                 vars.clear();
                 vars.shrink_to_fit();
                 return local;
+            }else if (tree[v].val == "["){
+                if (p != -1 && VarsToType[tree[p].variables.back()].second == 6){
+                    if (VarsToType[vars.back()].second != 0){
+                        std::cout << "FATAL: Trying to apply to " << tree[p].variables.back() << " array non 'int' size" << std::endl;
+                        assert(false);
+                    }
+                    arrayVars[tree[p].variables.back()] = array(intVars[vars.back()]);
+                }
+                vars.clear();
+                vars.shrink_to_fit();
+                return {};
             }
         }
         case 2:

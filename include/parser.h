@@ -4,6 +4,7 @@
 #define MAFFIN_PARSER_H
 
 #include "token.h"
+#include "../structs/array/array.h"
 
 class Function{
 public:
@@ -54,7 +55,7 @@ public:
     //std::unordered_map<std::string, > charVars;
     //std::unordered_map<std::string, > boolVars;
     //std::unordered_map<std::string, > stringVars;
-    //std::unordered_map<std::string, > arrayVars;
+    std::unordered_map<std::string, array> arrayVars;
     //std::unordered_map<std::string, > listVars;
     //std::unordered_map<std::string, > setVars;
     //std::unordered_map<std::string, > mapVars;
