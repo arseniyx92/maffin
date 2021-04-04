@@ -53,7 +53,7 @@ public:
     std::unordered_map<std::string, long long> longintVars;
     //std::unordered_map<std::string, > elongVars;
     //std::unordered_map<std::string, > charVars;
-    //std::unordered_map<std::string, > boolVars;
+    std::unordered_map<std::string, bool> boolVars;
     //std::unordered_map<std::string, > stringVars;
     std::unordered_map<std::string, array> arrayVars;
     //std::unordered_map<std::string, > listVars;
@@ -71,5 +71,28 @@ std::string copy_to_const(std::string s, Scope& scope);
 std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope);
 void getTokenTree(std::vector<Node> tree);
 std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars);
+bool compare(const std::string& val1, const std::string& val2, Scope& scope); // if first is smaller than second ? TRUE : FALSE
+
+
+template <typename T>
+std::string generate_const(const T& val, int type, Scope& scope){
+    std::string s = genRndString(5);
+    scope.VarsToType[s] = {false, type};
+    switch (type) {
+        case 0:
+            scope.intVars[s] = val;
+            break;
+        case 1:
+            scope.longintVars[s] = val;
+            break;
+        case 4:
+            scope.boolVars[s] = val;
+            break;
+        case 13:
+            scope.doubleVars[s] = val;
+            break;
+    }
+    return s;
+}
 
 #endif //MAFFIN_PARSER_H

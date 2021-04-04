@@ -33,7 +33,7 @@
 #define funcVars scope.funcVars
 
 std::unordered_set<std::string> BUILTIN = {
-        "print", "set", "get", "sizeof"
+        "print", "set", "get", "sizeof", "if"
 };
 
 std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope){
@@ -83,6 +83,10 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 {
                     longintVars[vars[0]] = 0;
                     break;
+                }
+                case 4:
+                {
+                    boolVars[vars[0]] = false;
                 }
                 case 6:
                 {
@@ -154,6 +158,11 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         longintVars[tree[p].variables[0]] = longintVars[vars[0]];
                         break;
                     }
+                    case 4:
+                    {
+                        boolVars[tree[p].variables[0]] = boolVars[vars[0]];
+                        break;
+                    }
                     case 13:
                     {
                         doubleVars[tree[p].variables[0]] = doubleVars[vars[0]];
@@ -169,6 +178,48 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 vars.clear();
                 vars.shrink_to_fit();
                 return {};
+            }else if (tree[v].val == "<"){
+                bool result = compare(tree[p].variables.back(), vars.back(), scope);
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
+            }else if (tree[v].val == "<="){
+                bool result = compare(tree[p].variables.back(), vars.back(), scope);
+                if (!result) result |= !compare(vars.back(), tree[p].variables.back(), scope);
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
+            }else if (tree[v].val == ">"){
+                bool result = compare(vars.back(), tree[p].variables.back(), scope);
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
+            }else if (tree[v].val == ">="){
+                bool result = compare(vars.back(), tree[p].variables.back(), scope);
+                if (!result) result |= !compare(tree[p].variables.back(), vars.back(), scope);
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
+            }else if (tree[v].val == "=="){
+                bool result = (!compare(vars.back(), tree[p].variables.back(), scope) && !compare(tree[p].variables.back(), vars.back(), scope));
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
             }else if (tree[v].val == "+"){
                 std::string firstStr, secondStr;
                 if (vars.empty()){
@@ -390,6 +441,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         VarsToType[s] = {false, 0};
                         intVars[s] = size;
                         vars = {s};
+                    }else if (tree[p].variables.back() == "if"){
                     }
                     tree[p].variables.pop_back();
                 }else if (p != -1 && !tree[p].variables.empty() && funcVars.count(tree[p].variables.back())){
@@ -410,6 +462,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         assert(false);
                     }
                     arrayVars[tree[p].variables.back()] = array(intVars[vars.back()]);
+                }else{
+                    std::cout << "FATAL: '[' unexpected" << std::endl;
+                    assert(false);
                 }
                 vars.clear();
                 vars.shrink_to_fit();

@@ -38,6 +38,9 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
             case 1:
                 scope.longintVars[s] = old_scope.longintVars[s];
                 break;
+            case 4:
+                scope.boolVars[s] = old_scope.boolVars[s];
+                break;
             case 12:
                 scope.funcVars[s] = old_scope.funcVars[s];
                 break;
@@ -66,6 +69,9 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
                 case 1:
                     old_scope.longintVars.erase(s);
                     break;
+                case 4:
+                    old_scope.boolVars.erase(s);
+                    break;
                 case 12:
                     old_scope.funcVars.erase(s);
                     break;
@@ -86,6 +92,9 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
             case 1:
                 old_scope.longintVars[s] = scope.longintVars[s];
                 break;
+            case 4:
+                old_scope.boolVars[s] = scope.boolVars[s];
+                break;
             case 12:
                 old_scope.funcVars[s] = scope.funcVars[s];
                 break;
@@ -105,6 +114,9 @@ std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old
                 break;
             case 1:
                 old_scope.longintVars[ns] = scope.longintVars[s];
+                break;
+            case 4:
+                old_scope.boolVars[ns] = scope.boolVars[s];
                 break;
             case 12:
                 old_scope.funcVars[ns] = scope.funcVars[s];
@@ -128,6 +140,9 @@ std::string copy_to_const(std::string s, Scope& scope){
         case 1:
             scope.longintVars[ns] = scope.longintVars[s];
             break;
+        case 4:
+            scope.boolVars[ns] = scope.boolVars[s];
+            break;
         case 12:
             scope.funcVars[ns] = scope.funcVars[s];
             break;
@@ -136,6 +151,50 @@ std::string copy_to_const(std::string s, Scope& scope){
             break;
     }
     return ns;
+}
+
+//template <typename T>
+//std::string generate_const(const T& val, int type, Scope& scope){
+//    std::string s = genRndString(5);
+//    scope.VarsToType[val] = {false, type};
+//    switch (type) {
+//        case 0:
+//            scope.intVars[s] = val;
+//            break;
+//        case 1:
+//            scope.longintVars[s] = val;
+//            break;
+//        case 4:
+//            scope.boolVars[s] = val;
+//            break;
+//        case 12:
+//            scope.funcVars[s] = val;
+//            break;
+//        case 13:
+//            scope.doubleVars[s] = val;
+//            break;
+//    }
+//    return s;
+//}
+
+bool compare(const std::string& val1, const std::string& val2, Scope& scope){
+    if (scope.VarsToType[val1].second != scope.VarsToType[val2].second){
+        std::cout << "FATAL: comparing two variables with different types" << std::endl;
+        assert(false);
+    }
+    switch (scope.VarsToType[val1].second) {
+        case 0:
+            return scope.intVars[val1] < scope.intVars[val2];
+        case 1:
+            return scope.longintVars[val1] < scope.longintVars[val2];
+        case 4:
+            return scope.boolVars[val1] < scope.boolVars[val2];
+        case 13:
+            return scope.doubleVars[val1] < scope.doubleVars[val2];
+        default:
+            std::cout << "FATAL: comparing incomparable type" << std::endl;
+            assert(false);
+    }
 }
 
 //DEFINES
@@ -176,6 +235,9 @@ void print_vals(const std::vector<std::string>& a, Scope& scope){
                 break;
             case 1:
                 std::cout << longintVars[x] << ' ';
+                break;
+            case 4:
+                std::cout << boolVars[x] << ' ';
                 break;
             case 13:
                 if (get_precision() != -1)

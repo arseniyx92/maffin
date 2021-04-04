@@ -16,12 +16,62 @@ To compile text
 
 ## EXAMPLES
 
+### V 0.5 (`bool` types and operations with them implemented)
+
+###### №1
+
+```asm
+    print(3 < 2);
+    print(3 <= 2);
+    print(3 > 2);
+    print(3 >= 2);
+    print(3 == 2);
+    print(2 < 2);
+    print(2 <= 2);
+    print(2 > 2);
+    print(2 >= 2);
+    print(2 == 2);
+    ~
+```
+
+RETURNS
+
+```c
+    0
+    0
+    1
+    1
+    0
+    0
+    1
+    0
+    1
+    1 
+```
+
+###### №2
+
+```asm
+    int a = 35;
+    int b = a+100;
+    print(b < a);
+    print(b > a);
+    ~
+```
+
+RETURNS
+
+```c
+    0
+    1
+```
+
 ### V 0.45 (function arguments now in the array system)
 
 It's little bit complicated thing, the point is that all the arguments
 of the function are represented as an `Args` array, so when you are passing
 any argument, to access them type `get(Args, 'index' )`, where `'index'`
-is an `int` value.
+is an `int` value. **_(V3 and V3.5 are permanently changed)_**
 
 ###### №1
 

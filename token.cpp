@@ -126,7 +126,8 @@ void run_row(){
                     }
                 }else if(x.second == ")" || x.second == "]" || x.second == "}"){
                     if (in_chain) assert(false);
-                    if (tree[rootsOfExpressions.back()].val == "=") rootsOfExpressions.pop_back();
+                    std::string pr = tree[rootsOfExpressions.back()].val;
+                    if (pr == "=" || pr == "<" || pr == "<=" || pr == ">" || pr == ">=" || pr == "==") rootsOfExpressions.pop_back();
                     if ((x.second == ")" && tree[rootsOfExpressions.back()].val == "(") ||
                         (x.second == "]" && tree[rootsOfExpressions.back()].val == "[") ||
                         (x.second == "}" && rootsOfExpressions.size() > 1 && tree[rootsOfExpressions[rootsOfExpressions.size()-2]].val == "{")){
@@ -143,14 +144,22 @@ void run_row(){
                         std::cout << tree[rootsOfExpressions.back()].val << " expected, but " << x.second << " recognized" << std::endl;
                         assert(false);
                     }
-                }else if (x.second == "="){
+                }else if (x.second == "=" || x.second == "<" || x.second == ">"){
+                    if (x.second == "=" && tree.back().id == 1){
+                        tree.back().val += x.second[0];
+                        expectations = {0, 1, 2, 3, 4};
+                        break;
+                    }
                     tree.push_back(Node(x.first, x.second));
                     if (in_chain) in_chain = false;
                     else tree[rootsOfExpressions.back()].children.push_back(cnt);
                     rootsOfExpressions.push_back(cnt);
                     cnt++;
                 }else{
-                    if (in_chain) assert(false);
+                    if (in_chain){
+                        std::cout << "FATAL: '" << x.second << "' operator after '" << tree.back().val << "' not expected" << std::endl;
+                        assert(false);
+                    }
                     tree.push_back(Node(x.first, x.second));
                     tree[rootsOfExpressions.back()].children.push_back(cnt);
                     tree.back().children.push_back(cnt+1);
