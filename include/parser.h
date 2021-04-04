@@ -26,6 +26,7 @@ private:
 
 class Scope{
 public:
+    bool go_into_curly = false;
     bool finished = false;
     std::unordered_map<std::string, std::pair<bool, int> > VarsToType; // { name, {is var(true) or const(false), what type} }
     /*

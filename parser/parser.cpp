@@ -15,6 +15,7 @@
 //DEFINES
 
 #define vars tree[v].variables
+#define go_into_curly scope.go_into_curly
 #define finished scope.finished
 #define VarsToType scope.VarsToType
 #define intVars scope.intVars
@@ -40,10 +41,14 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
     for (int j = 0; j < tree[v].children.size(); ++j){
         int i = tree[v].children[j];
         if (tree[i].val == "{"){
-            if (j == 0 || tree[tree[v].children[j-1]].id != 0){
-                std::cout << "FATAL: '{' not expected" << std::endl;
-                assert(false);
+            if (go_into_curly){
+                go_into_curly = false;
+                go(i, -1, 0, tree, scope);
             }
+//            if (j == 0 || tree[tree[v].children[j-1]].id != 0){
+//                std::cout << "FATAL: '{' not expected" << std::endl;
+//                assert(false);
+//            }
             continue;
         }
         std::vector<std::string> cur;
@@ -440,8 +445,16 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         intVars[s] = size;
+                        //clear cash TODO
                         vars = {s};
                     }else if (tree[p].variables.back() == "if"){
+                        if (vars.size() != 1 || VarsToType[vars.back()].second != 4){
+                            std::cout << "FATAL: more than one argument in 'if' statement" << std::endl;
+                            assert(false);
+                        }
+                        if (boolVars[vars.back()]) go_into_curly = true;
+                        //clear cash TODO
+                        vars = {};
                     }
                     tree[p].variables.pop_back();
                 }else if (p != -1 && !tree[p].variables.empty() && funcVars.count(tree[p].variables.back())){
@@ -470,6 +483,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 vars.shrink_to_fit();
                 return {};
             }
+            vars.clear();
+            vars.shrink_to_fit();
+            return {};
         }
         case 2:
         {

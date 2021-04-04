@@ -14,7 +14,49 @@ If you need to print something:
 To compile text
 `~`
 
+## TODO
+
+1) `!=`
+
 ## EXAMPLES
+
+### V 0.6 (`if` statements implemented)
+
+###### №1
+
+```asm
+    if (3 > 2)
+    {
+        print(3);
+    }
+    ~
+```
+
+RETURNS
+
+```c
+    3
+```
+
+###### №2
+
+```asm
+    if (3 < 2)
+    {
+        print(100);
+    }
+    if (3 > 2)
+    {
+        print(50);
+    }
+    ~
+```
+
+RETURNS
+
+```c
+    50
+```
 
 ### V 0.5 (`bool` types and operations with them implemented)
 
