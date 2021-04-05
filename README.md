@@ -17,6 +17,43 @@ To compile text
 ## TODO
 
 1) `for` loop
+2) solve BUG:
+```asm
+func loop{
+        if (get(Args, 0) == get(Args, 1)){ return 0; }
+        int i = get(Args, 0);
+        print(i);
+        i = i + 1;
+        int j = get(Args, 1);
+        loop(i, j);
+        return 0;
+}
+
+loop(0, 6);
+~
+//OK!
+
+func f{
+    return get(Args, 0);
+}
+
+int i = 0;
+print(f(i+1));
+//OK!
+
+func loop{
+        if (get(Args, 0) == 6) { return 0; }
+        int i = get(Args, 0);
+        print(i);
+        print(getsz(Args));
+        print();
+        loop(i+1);
+        return 0;
+}
+loop(0);
+~
+//FAIL!
+```
 
 ## EXAMPLES
 

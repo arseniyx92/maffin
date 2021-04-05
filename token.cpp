@@ -19,7 +19,7 @@ void get_keyword(Token token){
     cur_cmd.push_back({0, std::to_string(token.get_id())});
 }
 
-bool expect_curly = false;
+std::vector<char> expect_curly;
 char residue = 0;
 void get_special_character(char ch){
     if (ch == '&' || ch == '|'){
@@ -41,12 +41,14 @@ void get_special_character(char ch){
     std::string s = "";
     s += ch;
     cur_cmd.emplace_back(1, s);
-    if (ch == '{') expect_curly = true;
+    if (ch == '{') expect_curly.push_back(0);
     if (ch == '}'){
-        expect_curly = false;
+        expect_curly.pop_back();
+        if (expect_curly.empty()) run_row();
+    }
+    if (ch == ';' && expect_curly.empty()){
         run_row();
     }
-    if (ch == ';' && !expect_curly) run_row();
     if (ch == '~') flood_of();
 }
 
@@ -73,7 +75,7 @@ void get_variables(std::string var){
 }
 
 void run_row(){
-    bool in_curly = false;
+    std::vector<char> curl;
     bool in_chain = false;
     int cur_root = cnt;
     tree[rootsOfExpressions.back()].children.push_back(cnt);
@@ -117,7 +119,7 @@ void run_row(){
                     if (tree[rootsOfExpressions.back()].val == "=") rootsOfExpressions.pop_back();
                     if (rootsOfExpressions.back() != cur_root) assert(false);
                     rootsOfExpressions.pop_back();
-                    if (in_curly){
+                    if (curl.size()){
                         cur_root = cnt;
                         tree[rootsOfExpressions.back()].children.push_back(cnt);
                         tree.push_back(Node(ROW_SCOPE, ""));
@@ -134,7 +136,7 @@ void run_row(){
                     rootsOfExpressions.push_back(cnt);
                     cnt++;
                     if (x.second == "{"){
-                        in_curly = true;
+                        curl.push_back(0);
                         cur_root = cnt;
                         tree[rootsOfExpressions.back()].children.push_back(cnt);
                         tree.push_back(Node(ROW_SCOPE, ""));
@@ -149,8 +151,8 @@ void run_row(){
                         (x.second == "]" && tree[rootsOfExpressions.back()].val == "[") ||
                         (x.second == "}" && rootsOfExpressions.size() > 1 && tree[rootsOfExpressions[rootsOfExpressions.size()-2]].val == "{")){
                         rootsOfExpressions.pop_back();
-                        if (x.second == "}" && in_curly){
-                            in_curly = false;
+                        if (x.second == "}" && curl.size()){
+                            curl.pop_back();
                             tree[rootsOfExpressions.back()].children.pop_back();
                             tree.pop_back();
                             cnt--;
