@@ -18,7 +18,7 @@ public:
     }
 
     void set_value(std::string val, int pos){
-        if (pos < size) return void(arr[pos] = val);
+        if (pos < size && pos >= 0) return void(arr[pos] = val);
         else{
             std::cout << "Index out of range: expected index < " << size << " but " << pos << " arrived" << std::endl;
             assert(false);
@@ -26,7 +26,7 @@ public:
     }
 
     std::string get_value(int pos){
-        if (pos < size) return arr[pos];
+        if (pos < size || pos < 0) return arr[pos];
         else{
             std::cout << "Index out of range: expected index < " << size << " but " << pos << " arrived" << std::endl;
             assert(false);

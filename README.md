@@ -16,9 +16,29 @@ To compile text
 
 ## TODO
 
-1) `!=`
+1) `for` loop
 
 ## EXAMPLES
+
+### V 0.65 (`&&`, `||` operations)
+
+###### №1
+
+```asm
+    if ((3 > 2) || (3 < 2)){
+        print(228);
+    }
+    if ((3 > 2) && (3 < 2)){
+        print(822);
+    }
+    ~
+```
+
+RETURNS
+
+```c
+    228
+```
 
 ### V 0.6 (`if` statements implemented)
 

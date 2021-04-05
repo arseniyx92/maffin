@@ -24,6 +24,9 @@ std::unordered_map<char, int> SPECIAL_CHARACTERS = { // MAYBE SET INSTEAD OF MAP
     {',', 11},
     {'<', 12},
     {'>', 13},
+    {'!', 14},
+    {'&', 15},
+    {'|', 16},
     {';', ROW_SCOPE},
     {'~', GLOBAL_SCOPE}
 };

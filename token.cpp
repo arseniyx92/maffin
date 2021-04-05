@@ -20,10 +20,27 @@ void get_keyword(Token token){
 }
 
 bool expect_curly = false;
+char residue = 0;
 void get_special_character(char ch){
+    if (ch == '&' || ch == '|'){
+        if (residue != 0){
+            std::string s = "";
+            s += ch;
+            s += ch;
+            cur_cmd.emplace_back(1, s);
+            residue = 0;
+            return;
+        }
+        residue = ch;
+        return;
+    }
+    if (residue != 0){
+        std::cout << "FATAL: " << residue << " unexpected symbol" << std::endl;
+        assert(false);
+    }
     std::string s = "";
     s += ch;
-    cur_cmd.push_back({1, s});
+    cur_cmd.emplace_back(1, s);
     if (ch == '{') expect_curly = true;
     if (ch == '}'){
         expect_curly = false;
@@ -127,7 +144,7 @@ void run_row(){
                 }else if(x.second == ")" || x.second == "]" || x.second == "}"){
                     if (in_chain) assert(false);
                     std::string pr = tree[rootsOfExpressions.back()].val;
-                    if (pr == "=" || pr == "<" || pr == "<=" || pr == ">" || pr == ">=" || pr == "==") rootsOfExpressions.pop_back();
+                    if (pr == "=" || pr == "<" || pr == "<=" || pr == ">" || pr == ">=" || pr == "==" || pr == "!=" || pr == "&&" || pr == "||") rootsOfExpressions.pop_back();
                     if ((x.second == ")" && tree[rootsOfExpressions.back()].val == "(") ||
                         (x.second == "]" && tree[rootsOfExpressions.back()].val == "[") ||
                         (x.second == "}" && rootsOfExpressions.size() > 1 && tree[rootsOfExpressions[rootsOfExpressions.size()-2]].val == "{")){
@@ -144,7 +161,7 @@ void run_row(){
                         std::cout << tree[rootsOfExpressions.back()].val << " expected, but " << x.second << " recognized" << std::endl;
                         assert(false);
                     }
-                }else if (x.second == "=" || x.second == "<" || x.second == ">"){
+                }else if (x.second == "=" || x.second == "<" || x.second == ">" || x.second == "!" || x.second == "&&" || x.second == "||"){
                     if (x.second == "=" && tree.back().id == 1){
                         tree.back().val += x.second[0];
                         expectations = {0, 1, 2, 3, 4};

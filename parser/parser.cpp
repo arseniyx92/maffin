@@ -225,6 +225,46 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 vars.clear();
                 vars.shrink_to_fit();
                 return {s};
+            }else if (tree[v].val == "!="){
+                bool result = (compare(vars.back(), tree[p].variables.back(), scope) || compare(tree[p].variables.back(), vars.back(), scope));
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
+            }else if (tree[v].val == "&&"){
+                if (p == -1 || tree[p].variables.size() != 1 || vars.size() != 1){
+                    std::cout << "FATAL: '&&' ambiguous here" << std::endl;
+                    assert(false);
+                }
+                if (VarsToType[tree[p].variables.back()].second != VarsToType[vars.back()].second || VarsToType[vars.back()].second != 4){
+                    std::cout << "FATAL: '&&' with non bool values" << std::endl;
+                    assert(false);
+                }
+                bool result = (boolVars[tree[p].variables.back()] && boolVars[vars.back()]);
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
+            }else if (tree[v].val == "||"){
+                if (p == -1 || tree[p].variables.size() != 1 || vars.size() != 1){
+                    std::cout << "FATAL: '||' ambiguous here" << std::endl;
+                    assert(false);
+                }
+                if (VarsToType[tree[p].variables.back()].second != VarsToType[vars.back()].second || VarsToType[vars.back()].second != 4){
+                    std::cout << "FATAL: '||' with non bool values" << std::endl;
+                    assert(false);
+                }
+                bool result = (boolVars[tree[p].variables.back()] || boolVars[vars.back()]);
+                // TODO clear_cash
+                tree[p].variables.pop_back();
+                std::string s = generate_const<bool>(result, 4, scope);
+                vars.clear();
+                vars.shrink_to_fit();
+                return {s};
             }else if (tree[v].val == "+"){
                 std::string firstStr, secondStr;
                 if (vars.empty()){
