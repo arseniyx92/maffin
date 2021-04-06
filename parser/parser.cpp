@@ -35,7 +35,7 @@
 #define funcVars scope.funcVars
 
 std::unordered_set<std::string> BUILTIN = {
-        "print", "set", "get", "sizeof", "if"
+        "print", "set", "get", "sizeof", "if", "for"
 };
 
 std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope){
@@ -492,6 +492,39 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         if (boolVars[vars.back()]) go_into_curly = true;
                         //clear cash TODO
                         vars = {};
+                    }else if (tree[p].variables.back() == "for"){
+                        if (vars.size() == 0){
+                            std::cout << "FATAL: no arguments in 'for' loop" << std::endl;
+                            assert(false);
+                        }else if (vars.size() == 1){
+                            while (boolVars[vars.back()] == true){
+                                go_into_curly = true;
+                                go(tree[p].children[what_child+1], -1, 0, tree, scope);
+                                //updating loop
+                                vars.clear();
+                                for (int j = 0; j < tree[v].children.size(); ++j){
+                                    int i = tree[v].children[j];
+                                    if (tree[i].val == "{"){
+                                        if (go_into_curly){
+                                            go_into_curly = false;
+                                            go(i, -1, 0, tree, scope);
+                                        }
+                                        continue;
+                                    }
+                                    std::vector<std::string> cur;
+                                    cur = go(i, v, j, tree, scope);
+                                    for (std::string x:cur)
+                                        vars.push_back(x);
+                                    if (finished){
+                                        if (v == root) return {vars[0]};
+                                        vars.clear();
+                                        vars.shrink_to_fit();
+                                        return {};
+                                    }
+                                }
+                                //updating loop
+                            }
+                        }
                     }
                     tree[p].variables.pop_back();
                 }else if (p != -1 && !tree[p].variables.empty() && funcVars.count(tree[p].variables.back())){

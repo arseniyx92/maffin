@@ -20,6 +20,28 @@ To compile text
 
 ## EXAMPLES
 
+### V 0.8 (`for` loop with one argument) // it was extremely easy because everything for loop I already had
+
+###### №1
+
+```asm
+    int a = 0;
+    for (a < 3){
+        a = a+1;
+        print(a);
+    }
+    ~
+```
+
+RETURNS
+
+```c
+    1
+    2
+    3
+    4
+```
+
 ### V 0.7 (recursion)
 
 ###### №1
