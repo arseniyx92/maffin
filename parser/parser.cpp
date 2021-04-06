@@ -15,6 +15,7 @@
 //DEFINES
 
 #define vars tree[v].variables
+#define root scope.root
 #define go_into_curly scope.go_into_curly
 #define finished scope.finished
 #define VarsToType scope.VarsToType
@@ -56,14 +57,10 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
         for (std::string x:cur)
             vars.push_back(x);
         if (finished){
-            if (p != -1){
-                tree[p].variables.clear();
-                tree[p].variables.shrink_to_fit();
-            }
-            std::string result = vars[0];
+            if (v == root) return {vars[0]};
             vars.clear();
             vars.shrink_to_fit();
-            return {result};
+            return {};
         }
     }
     switch (tree[v].id){
@@ -120,12 +117,12 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 case 100:
                 {
                     finished = true;
-                    tree[p].variables.clear();
-                    tree[p].variables.shrink_to_fit();
-                    std::string result = vars[0];
+                    tree[root].variables.clear();
+                    tree[root].variables.shrink_to_fit();
+                    tree[root].variables.push_back(vars[0]);
                     vars.clear();
                     vars.shrink_to_fit();
-                    return {result};
+                    return {};
                 }
                 default:
                     assert(false);
@@ -498,7 +495,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     }
                     tree[p].variables.pop_back();
                 }else if (p != -1 && !tree[p].variables.empty() && funcVars.count(tree[p].variables.back())){
-                    std::string result = {execute_function(funcVars[tree[p].variables.back()], tree, scope, vars)};
+                    std::string result = {execute_function(funcVars[tree[p].variables.back()], scope, vars)};
                     tree[p].variables.pop_back();
                     vars.clear();
                     vars.shrink_to_fit();
@@ -569,6 +566,7 @@ void getTokenTree(std::vector<Node> tree){
         std::cout << std::endl;
     }
     Scope scope;
+    scope.PURE_TREE = tree;
     go(0, -1, 0, tree, scope);
     std::cout << std::endl;
     exit(EXIT_SUCCESS);
@@ -601,4 +599,14 @@ void getTokenTree(std::vector<Node> tree){
 //print(u);
 //u = f(u);
 //print(u);
+//~
+
+//func f
+//        {
+//                print(get(Args, 0));
+//            if (get(Args, 0) >= 6){ return 0; }
+//            f(get(Args, 0)+1);
+//            return 1;
+//        }
+//f(0);
 //~

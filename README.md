@@ -17,45 +17,73 @@ To compile text
 ## TODO
 
 1) `for` loop
-2) solve BUG:
+
+## EXAMPLES
+
+### V 0.7 (recursion)
+
+###### №1
+
 ```asm
-func loop{
-        if (get(Args, 0) == get(Args, 1)){ return 0; }
-        int i = get(Args, 0);
-        print(i);
-        i = i + 1;
-        int j = get(Args, 1);
-        loop(i, j);
-        return 0;
-}
-
-loop(0, 6);
-~
-//OK!
-
-func f{
-    return get(Args, 0);
-}
-
-int i = 0;
-print(f(i+1));
-//OK!
-
-func loop{
+    func loop{
         if (get(Args, 0) == 6) { return 0; }
         int i = get(Args, 0);
         print(i);
-        print(getsz(Args));
+        print(sizeof(Args));
         print();
         loop(i+1);
         return 0;
-}
-loop(0);
-~
-//FAIL!
+    }
+    loop(0);
+    ~
 ```
 
-## EXAMPLES
+RETURNS
+
+```c
+    0
+    1
+    
+    1
+    1
+    
+    2
+    1
+    
+    3
+    1
+    
+    4
+    1
+    
+    5
+    1 
+```
+
+###### №2
+
+```asm
+    func loop{
+        print(get(Args, 0));
+        if (get(Args, 0) == get(Args, 1)) { return 0; }
+        loop(get(Args, 0)+1, get(Args, 1));
+        return 0;
+    }
+    loop(0, 6);
+    ~
+```
+
+RETURNS
+
+```c
+    0 
+    1 
+    2 
+    3 
+    4 
+    5 
+    6
+```
 
 ### V 0.65 (`&&`, `||` operations)
 

@@ -45,6 +45,7 @@ void get_special_character(char ch){
     if (ch == '}'){
         expect_curly.pop_back();
         if (expect_curly.empty()) run_row();
+        return;
     }
     if (ch == ';' && expect_curly.empty()){
         run_row();
@@ -157,7 +158,13 @@ void run_row(){
                             tree.pop_back();
                             cnt--;
                             rootsOfExpressions.pop_back();
-                            cur_root = rootsOfExpressions.back();
+                            rootsOfExpressions.pop_back();
+
+                            cur_root = cnt;
+                            tree[rootsOfExpressions.back()].children.push_back(cnt);
+                            tree.push_back(Node(ROW_SCOPE, ""));
+                            rootsOfExpressions.push_back(cnt);
+                            cnt++;
                         }
                     }else{
                         std::cout << tree[rootsOfExpressions.back()].val << " expected, but " << x.second << " recognized" << std::endl;
@@ -240,3 +247,13 @@ void flood_of(){
     tree.clear();
     tree.shrink_to_fit();
 }
+
+
+//func f
+//        {
+//                print(get(Args, 0));
+//        if (get(Args, 0) >= 6){ return 0; }
+//        f(get(Args, 0)+1);
+//        }
+//f(0);
+//~

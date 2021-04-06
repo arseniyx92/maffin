@@ -26,6 +26,8 @@ private:
 
 class Scope{
 public:
+    int root = 0;
+    std::vector<Node> PURE_TREE;
     bool go_into_curly = false;
     bool finished = false;
     std::unordered_map<std::string, std::pair<bool, int> > VarsToType; // { name, {is var(true) or const(false), what type} }
@@ -71,7 +73,7 @@ std::string genRndString(int len);
 std::string copy_to_const(std::string s, Scope& scope);
 std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope);
 void getTokenTree(std::vector<Node> tree);
-std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars);
+std::string execute_function(Function& func, Scope& old_scope, std::vector<std::string>& input_vars);
 bool compare(const std::string& val1, const std::string& val2, Scope& scope); // if first is smaller than second ? TRUE : FALSE
 
 

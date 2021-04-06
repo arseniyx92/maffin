@@ -14,11 +14,14 @@
 
 //LANGUAGE VITAL FUNCTIONS
 
-std::string execute_function(Function& func, std::vector<Node>& tree, Scope& old_scope, std::vector<std::string>& input_vars){
+std::string execute_function(Function& func, Scope& old_scope, std::vector<std::string>& input_vars){
     int vertex_on_AST = func.get_vertex();
     std::vector<std::string> variables = func.get_variables();
     //uploading scope
     Scope scope;
+    scope.root = vertex_on_AST;
+    scope.PURE_TREE = old_scope.PURE_TREE;
+    std::vector<Node> tree = scope.PURE_TREE;
     std::vector<std::string> input_consts;
     input_consts.reserve(input_vars.size());
     array Args = array(input_vars.size());
