@@ -28,6 +28,7 @@
 #define stringVars scope.stringVars
 #define arrayVars scope.arrayVars
 #define listVars scope.listVars
+#define stackVars scope.stackVars
 #define setVars scope.setVars
 #define mapVars scope.mapVars
 #define hashSetVars scope.hashSetVars
@@ -35,7 +36,11 @@
 #define funcVars scope.funcVars
 
 std::unordered_set<std::string> BUILTIN = {
-        "print", "set", "get", "sizeof", "if", "for"
+        "print", "set", "get", "push", "pop", "sizeof", "capacity", "if", "while"
+};
+
+std::unordered_set<std::string> RESERVED = {
+        "Args"
 };
 
 std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tree, Scope& scope){
@@ -67,6 +72,10 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
         case 0:
         {
             if (vars.size() != 1) assert(false); // SHOULD BE CHANGED TO MULTIPLE DECLARATION
+            if (RESERVED.count(vars[0]) || BUILTIN.count(vars[0])){
+                std::cout << "WARNING: " << vars[0] << " IS A RESERVED TYPENAME" << std::endl;
+                assert(false);
+            }
             if ((stoi(tree[v].val) < 100) && (VarsToType.count(vars[0]))){ // IF ALREADY EXISTS
                 std::cout << "FATAL: " << vars[0] <<  " ALREADY EXISTS" << std::endl;
                 assert(false);
@@ -93,6 +102,11 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 case 6:
                 {
                     arrayVars[vars[0]] = array();
+                    break;
+                }
+                case 8:
+                {
+                    stackVars[vars[0]] = stack();
                     break;
                 }
                 case 13:
@@ -430,60 +444,101 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         print_vals(vars, scope);
                         std::cout << std::endl;
                     }else if (tree[p].variables.back() == "set"){
-                        switch (VarsToType[vars[0]].second){
+                        if (vars.size() != 3){
+                            std::cout << "FATAL: Incorrect number of parameters in SET function" << std::endl;
+                            assert(false);
+                        }
+                        if (VarsToType[vars[2]].second != 0){
+                            std::cout << "FATAL: Trying to change in " << tree[p].variables.back() << " array non 'int' index" << std::endl;
+                            assert(false);
+                        }
+                        std::string ns = copy_to_const(vars[1], scope);
+                        switch (VarsToType[vars[0]].second) {
                             case 6:
-                            {
-                                if (vars.size() != 3){
-                                    std::cout << "FATAL: Incorrect number of parameters in SET function" << std::endl;
-                                    assert(false);
-                                }
-                                if (VarsToType[vars[2]].second != 0){
-                                    std::cout << "FATAL: Trying to change in " << tree[p].variables.back() << " array non 'int' index" << std::endl;
-                                    assert(false);
-                                }
-                                std::string ns = copy_to_const(vars[1], scope);
                                 arrayVars[vars[0]].set_value(ns, intVars[vars[2]]);
-//                                arrayVars[vars[0]].set_value(vars[1], intVars[vars[2]]);
-                            }
+                                break;
+                            case 8:
+                                stackVars[vars[0]].set_value(ns, intVars[vars[2]]);
+                                break;
                         }
                         //clear cash TODO
                         vars = {};
                     }else if (tree[p].variables.back() == "get"){
                         std::string s;
-                        switch (VarsToType[vars[0]].second){
+                        if (vars.size() != 2){
+                            std::cout << "FATAL: Incorrect number of parameters in GET function" << std::endl;
+                            assert(false);
+                        }
+                        if (VarsToType[vars[1]].second != 0){
+                            std::cout << "FATAL: Trying to get from " << tree[p].variables.back() << " array element with non 'int' index" << std::endl;
+                            assert(false);
+                        }
+                        switch (VarsToType[vars[0]].second) {
                             case 6:
-                            {
-                                if (vars.size() != 2){
-                                    std::cout << "FATAL: Incorrect number of parameters in GET function" << std::endl;
-                                    assert(false);
-                                }
-                                if (VarsToType[vars[1]].second != 0){
-                                    std::cout << "FATAL: Trying to get from " << tree[p].variables.back() << " array element with non 'int' index" << std::endl;
-                                    assert(false);
-                                }
                                 s = arrayVars[vars[0]].get_value(intVars[vars[1]]);
-                            }
+                                break;
+                            case 8:
+                                s = stackVars[vars[0]].get_value(intVars[vars[1]]);
+                                break;
                         }
                         //clear cash TODO
                         std::string ns = copy_to_const(s, scope);
                         vars = {ns};
                     }else if (tree[p].variables.back() == "sizeof"){
                         int size;
+                        if (vars.size() != 1){
+                            std::cout << "FATAL: Incorrect number of parameters in SIZEOF function" << std::endl;
+                            assert(false);
+                        }
                         switch (VarsToType[vars[0]].second){
                             case 6:
-                            {
-                                if (vars.size() != 1){
-                                    std::cout << "FATAL: Incorrect number of parameters in SIZEOF function" << std::endl;
-                                    assert(false);
-                                }
                                 size = arrayVars[vars[0]].get_size();
-                            }
+                                break;
+                            case 8:
+                                size = stackVars[vars[0]].get_size();
+                                break;
                         }
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
                         intVars[s] = size;
                         //clear cash TODO
                         vars = {s};
+                    }else if (tree[p].variables.back() == "capacity"){
+                        int capacity;
+                        if (vars.size() != 1){
+                            std::cout << "FATAL: Incorrect number of parameters in CAPACITY function" << std::endl;
+                            assert(false);
+                        }
+                        switch (VarsToType[vars[0]].second){
+                            case 8:
+                                capacity = stackVars[vars[0]].get_capacity();
+                                break;
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 0};
+                        intVars[s] = capacity;
+                        //clear cash TODO
+                        vars = {s};
+                    }else if (tree[p].variables.back() == "push"){
+                        if (vars.size() != 2){
+                            std::cout << "FATAL: Incorrect number of parameters in PUSH function (need to be 2)" << std::endl;
+                            assert(false);
+                        }
+                        switch (VarsToType[vars[0]].second){
+                            case 8:
+                                stackVars[vars[0]].push_back(vars[1]);
+                                break;
+                        }
+                    }else if (tree[p].variables.back() == "pop"){
+                        if (vars.size() != 1){
+                            std::cout << "FATAL: Incorrect number of parameters in PUSH function (need to be 1)" << std::endl;
+                            assert(false);
+                        }
+                        switch (VarsToType[vars[0]].second){
+                            case 8:
+                                stackVars[vars[0]].pop_back();
+                                break;
+                        }
                     }else if (tree[p].variables.back() == "if"){
                         if (vars.size() != 1 || VarsToType[vars.back()].second != 4){
                             std::cout << "FATAL: more than one argument in 'if' statement" << std::endl;
@@ -492,39 +547,45 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         if (boolVars[vars.back()]) go_into_curly = true;
                         //clear cash TODO
                         vars = {};
-                    }else if (tree[p].variables.back() == "for"){
-                        if (vars.size() == 0){
-                            std::cout << "FATAL: no arguments in 'for' loop" << std::endl;
+                    }else if (tree[p].variables.back() == "while"){
+                        if (vars.size() == 0) {
+                            std::cout << "FATAL: no arguments in 'while' loop" << std::endl;
                             assert(false);
-                        }else if (vars.size() == 1){
-                            while (boolVars[vars.back()] == true){
-                                go_into_curly = true;
-                                go(tree[p].children[what_child+1], -1, 0, tree, scope);
-                                //updating loop
-                                vars.clear();
-                                for (int j = 0; j < tree[v].children.size(); ++j){
-                                    int i = tree[v].children[j];
-                                    if (tree[i].val == "{"){
-                                        if (go_into_curly){
-                                            go_into_curly = false;
-                                            go(i, -1, 0, tree, scope);
-                                        }
-                                        continue;
+                        }
+                        std::unordered_map<std::string, std::pair<bool, int> > SAFE;
+                        SAFE = VarsToType;
+                        while (boolVars[vars.back()] == true){
+                            go_into_curly = true;
+                            go(tree[p].children[what_child+1], -1, 0, tree, scope);
+
+                            //updating scope
+                            VarsToType = SAFE;
+
+                            //updating loop
+                            vars.clear();
+                            for (int j = 0; j < tree[v].children.size(); ++j){
+                                int i = tree[v].children[j];
+                                if (tree[i].val == "{"){
+                                    if (go_into_curly){
+                                        go_into_curly = false;
+                                        go(i, -1, 0, tree, scope);
                                     }
-                                    std::vector<std::string> cur;
-                                    cur = go(i, v, j, tree, scope);
-                                    for (std::string x:cur)
-                                        vars.push_back(x);
-                                    if (finished){
-                                        if (v == root) return {vars[0]};
-                                        vars.clear();
-                                        vars.shrink_to_fit();
-                                        return {};
-                                    }
+                                    continue;
                                 }
-                                //updating loop
+                                std::vector<std::string> cur;
+                                cur = go(i, v, j, tree, scope);
+                                for (std::string x:cur)
+                                    vars.push_back(x);
+                                if (finished){
+                                    if (v == root) return {vars[0]};
+                                    vars.clear();
+                                    vars.shrink_to_fit();
+                                    return {};
+                                }
                             }
                         }
+                        go_into_curly = false;
+                        // TODO: clear cash
                     }
                     tree[p].variables.pop_back();
                 }else if (p != -1 && !tree[p].variables.empty() && funcVars.count(tree[p].variables.back())){

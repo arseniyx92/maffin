@@ -32,7 +32,7 @@ std::unordered_map<char, int> SPECIAL_CHARACTERS = { // MAYBE SET INSTEAD OF MAP
 };
 
 Token function_token(12), int32_token(0), int64_token(1), unsigned_token(-1),\
-elong_token(-1), float_token(13), return_token(100), array_token(6);
+elong_token(-1), float_token(13), return_token(100), array_token(6), stack_token(8);
 
 std::unordered_map<std::string, Token> KEY_WORDS = {
         {"func", function_token},
@@ -42,7 +42,8 @@ std::unordered_map<std::string, Token> KEY_WORDS = {
         {"elong", elong_token},
         {"float", float_token},
         {"unsigned", unsigned_token},
-        {"array", array_token}
+        {"array", array_token},
+        {"stack", stack_token}
 };
 
 #endif //MAFFIN_CONSTANTS_H

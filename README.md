@@ -16,9 +16,57 @@ To compile text
 
 ## TODO
 
-1) `for` loop
+1) fix bug
+```asm
+stack a;
+push(a, 5);
+push(a, 6);
+push(a, 10);
+print(get(a, 0));
+print(get(a, 1));
+print(get(a, 2));
+set(a, 0, 2);
+print(get(a, 0));
+pop(a);
+push(a, 100);
+print(get(a, 2));
+~
+```
+
+RETURNS
+
+```c
+0 
+0 
+10 
+0 
+100 
+```
 
 ## EXAMPLES
+
+### V 0.85 (`for` renamed to `while`, bugs with `while` fixed)
+
+###### №1
+
+```asm
+    int i = 0;
+    while (i < 4){
+        print(i);
+        int u = 1;
+        i = i+u;
+    }
+    ~
+```
+
+RETURNS
+
+```c
+    0
+    1
+    2
+    3
+```
 
 ### V 0.8 (`for` loop with one argument) // it was extremely easy because everything for loop I already had
 
