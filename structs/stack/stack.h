@@ -10,14 +10,17 @@ class stack {
 public:
     stack() {
         size = 0;
-        capacity = 2; //50
+        capacity = 2;
         arr = new std::string[capacity];
     }
 
     void increase_size(){
         std::string *new_arr = new std::string[2*capacity];
-        memcpy(new_arr, arr, capacity);
+        for (int i = 0; i < size; ++i){
+            new_arr[i] = std::move(arr[i]);
+        }
         capacity *= 2;
+        delete []arr;
         arr = new_arr;
     }
 

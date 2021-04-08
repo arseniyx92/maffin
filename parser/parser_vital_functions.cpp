@@ -254,7 +254,7 @@ void print_vals(const std::vector<std::string>& a, Scope& scope){
 std::string genRndString(int len){
     std::string s = "+";
     for (int i = 0; i < len; ++i) {
-        s += char(rnd() % 277);
+        s += char(rnd() % 150 + 10);
     }
     return s;
 }

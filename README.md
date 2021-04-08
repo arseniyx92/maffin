@@ -16,34 +16,48 @@ To compile text
 
 ## TODO
 
-1) fix bug
+## DATA STRUCTURES
+
+:
+
+######NAME--------------TIME NOTATIONS
+**array**----------------set(O(1)), get(O(1))\
+**stack**----------------set(O(1)), get(O(1)), push(O(1)), pop(O(1))\
+**list**--------------------set(O(logn)), get(O(logn)), insert(O(logn)), erase(O(logn))
+
+:
+
+## EXAMPLES
+
+### V 0.9 (stack implemented)
+
+###### №1
+
 ```asm
-stack a;
-push(a, 5);
-push(a, 6);
-push(a, 10);
-print(get(a, 0));
-print(get(a, 1));
-print(get(a, 2));
-set(a, 0, 2);
-print(get(a, 0));
-pop(a);
-push(a, 100);
-print(get(a, 2));
-~
+    stack a;
+    push(a, 5);
+    push(a, 6);
+    push(a, 10);
+    print(get(a, 0));
+    print(get(a, 1));
+    print(get(a, 2));
+    set(a, 2, 0);
+    print(get(a, 0));
+    pop(a);
+    push(a, 100);
+    print(get(a, 2));
+    ~
 ```
 
 RETURNS
 
 ```c
-0 
-0 
-10 
-0 
-100 
+    5
+    6
+    10
+    2
+    100 
 ```
-
-## EXAMPLES
 
 ### V 0.85 (`for` renamed to `while`, bugs with `while` fixed)
 
