@@ -14,16 +14,44 @@ If you need to print something:
 To compile text
 `~`
 
-## TODO
+## WARNINGS
+
+THIS MAY CAUSE A PROBLEM
+
+```asm
+func lol{
+        if (get(Args, 0) == 0){ return 1; }
+        return lol(get(Args, 0)-1)+lol(get(Args, 0)-1); //here
+}
+
+print(lol(2));
+~
+```
+
+BECAUSE "lol(get(Args, 0)-1)" should be in brackets like this
+"(lol(get(Args, 0)-1))", so this is correct:
+
+```asm
+func lol{
+        if (get(Args, 0) == 0){ return 1; }
+        return lol(get(Args, 0)-1)+(lol(get(Args, 0)-1)); //here
+}
+
+print(lol(2));
+~
+```
+
+it's because of the AST structure, all priorities depends only
+on brackets and order.
 
 ## DATA STRUCTURES
 
 :
 
-######NAME--------------TIME NOTATIONS
-**array**----------------set(O(1)), get(O(1))\
-**stack**----------------set(O(1)), get(O(1)), push(O(1)), pop(O(1))\
-**list**--------------------set(O(logn)), get(O(logn)), insert(O(logn)), erase(O(logn))
+###### NAME--------------TIME NOTATIONS
+**array**----------------set(O(1)), get(O(1)) | size = O(n)\
+**stack**----------------set(O(1)), get(O(1)), push(O(1)), pop(O(1)), size = O(n)\
+**skiplist**--------------------set(O(logn)), get(O(logn)), insert(O(logn)), erase(O(logn)), size = O(nlogn)
 
 :
 
