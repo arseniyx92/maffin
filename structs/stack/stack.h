@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef MAFFIN_STACK_H
 #define MAFFIN_STACK_H
 

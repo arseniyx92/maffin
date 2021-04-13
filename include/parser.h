@@ -6,6 +6,7 @@
 #include "token.h"
 #include "../structs/array/array.h"
 #include "../structs/stack/stack.h"
+#include "../structs/skiplist/skiplist.h"
 
 class Function{
 public:
@@ -41,7 +42,7 @@ public:
     4 - bool,
     5 - string,
     6 - array,
-    7 - list,
+    7 - skiplist,
     8 - stack,
     8 - set, //splay tree
     9 - map, //splay tree
@@ -62,7 +63,7 @@ public:
     //std::unordered_map<std::string, > stringVars;
     std::unordered_map<std::string, array> arrayVars;
     std::unordered_map<std::string, stack> stackVars;
-    //std::unordered_map<std::string, > listVars;
+    std::unordered_map<std::string, skiplist<std::string> > skiplistVars;
     //std::unordered_map<std::string, > setVars;
     //std::unordered_map<std::string, > mapVars;
     //std::unordered_map<std::string, > hashSetVars;

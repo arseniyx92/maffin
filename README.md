@@ -57,6 +57,35 @@ on brackets and order.
 
 ## EXAMPLES
 
+### V 1.0 `ALPHA` (skiplist implemented, a lot of bugs fixed, documentation added)
+
+```asm
+    skiplist lst;
+    insert(lst, 5, 0);
+    insert(lst, 6, 0);
+    print(get(lst, 0));
+    print(get(lst, 1));
+    print(sizeof(lst));
+    print(capacity(lst));
+    erase(lst, 0);
+    print(get(lst, 0));
+    print(sizeof(lst));
+    print(capacity(lst));
+    ~
+```
+
+RETURNS
+
+```c
+    6 
+    5 
+    3 
+    6 
+    5 
+    2 
+    6 
+```
+
 ### V 0.9 (stack implemented)
 
 ###### №1

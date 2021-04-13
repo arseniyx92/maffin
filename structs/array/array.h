@@ -1,3 +1,4 @@
+#pragma once
 
 #ifndef MAFFIN_ARRAY_H
 #define MAFFIN_ARRAY_H

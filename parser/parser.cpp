@@ -27,7 +27,7 @@
 #define boolVars scope.boolVars
 #define stringVars scope.stringVars
 #define arrayVars scope.arrayVars
-#define listVars scope.listVars
+#define skiplistVars scope.skiplistVars
 #define stackVars scope.stackVars
 #define setVars scope.setVars
 #define mapVars scope.mapVars
@@ -36,7 +36,7 @@
 #define funcVars scope.funcVars
 
 std::unordered_set<std::string> BUILTIN = {
-        "print", "set", "get", "push", "pop", "sizeof", "capacity", "if", "while"
+        "print", "set", "get", "push", "pop", "sizeof", "capacity", "if", "while", "insert", "erase"
 };
 
 std::unordered_set<std::string> RESERVED = {
@@ -102,6 +102,11 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                 case 6:
                 {
                     arrayVars[vars[0]] = array();
+                    break;
+                }
+                case 7:
+                {
+                    skiplistVars[vars[0]] = skiplist<std::string>();
                     break;
                 }
                 case 8:
@@ -460,6 +465,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             case 8:
                                 stackVars[vars[0]].set_value(ns, intVars[vars[2]]);
                                 break;
+                            case 7:
+                                skiplistVars[vars[0]].set_value(ns, intVars[vars[1]]);
+                                break;
                         }
                         //clear cash TODO
                         vars = {};
@@ -480,6 +488,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             case 8:
                                 s = stackVars[vars[0]].get_value(intVars[vars[1]]);
                                 break;
+                            case 7:
+                                s = skiplistVars[vars[0]].find(intVars[vars[1]]);
+                                break;
                         }
                         //clear cash TODO
                         std::string ns = copy_to_const(s, scope);
@@ -497,6 +508,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             case 8:
                                 size = stackVars[vars[0]].get_size();
                                 break;
+                            case 7:
+                                size = skiplistVars[vars[0]]._size;
+                                break;
                         }
                         std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
@@ -512,6 +526,9 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         switch (VarsToType[vars[0]].second){
                             case 8:
                                 capacity = stackVars[vars[0]].get_capacity();
+                                break;
+                            case 7:
+                                capacity = skiplistVars[vars[0]].capacity;
                                 break;
                         }
                         std::string s = genRndString(5);
@@ -537,6 +554,26 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         switch (VarsToType[vars[0]].second){
                             case 8:
                                 stackVars[vars[0]].pop_back();
+                                break;
+                        }
+                    }else if (tree[p].variables.back() == "insert"){
+                        if (vars.size() != 3){
+                            std::cout << "FATAL: Incorrect number of parameters in INSERT function (need to be 3)" << std::endl;
+                            assert(false);
+                        }
+                        switch (VarsToType[vars[0]].second){
+                            case 7:
+                                skiplistVars[vars[0]].insert(vars[1], intVars[vars[2]]);
+                                break;
+                        }
+                    }else if (tree[p].variables.back() == "erase"){
+                        if (vars.size() != 2){
+                            std::cout << "FATAL: Incorrect number of parameters in ERASE function (need to be 2)" << std::endl;
+                            assert(false);
+                        }
+                        switch (VarsToType[vars[0]].second){
+                            case 7:
+                                skiplistVars[vars[0]].erase(intVars[vars[1]]);
                                 break;
                         }
                     }else if (tree[p].variables.back() == "if"){
