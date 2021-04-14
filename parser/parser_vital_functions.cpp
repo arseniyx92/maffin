@@ -29,6 +29,29 @@ std::string execute_function(Function& func, Scope& old_scope, std::vector<std::
         std::string ns = copy_to_const(input_vars[i], old_scope);
         Args.set_value(ns, i);
         input_consts.push_back(ns);
+        switch (old_scope.VarsToType[ns].second){
+            case 6:
+                for (int i = 0; i < old_scope.arrayVars[ns].get_size(); ++i){
+                    std::string nc = copy_to_const(old_scope.arrayVars[ns].get_value(i), old_scope);
+                    old_scope.arrayVars[ns].set_value(nc, i);
+                    input_consts.push_back(nc);
+                }
+                break;
+            case 8:
+                for (int i = 0; i < old_scope.stackVars[ns].get_size(); ++i){
+                    std::string nc = copy_to_const(old_scope.stackVars[ns].get_value(i), old_scope);
+                    old_scope.stackVars[ns].set_value(nc, i);
+                    input_consts.push_back(nc);
+                }
+                break;
+            case 7:
+                for (int i = 0; i < old_scope.skiplistVars[ns]._size; ++i){
+                    std::string nc = copy_to_const(old_scope.skiplistVars[ns].find(i), old_scope);
+                    old_scope.skiplistVars[ns].set_value(nc, i);
+                    input_consts.push_back(nc);
+                }
+                break;
+        }
     }
     variables.reserve(variables.size()+input_consts.size());
     variables.insert(variables.end(), input_consts.begin(), input_consts.end());
@@ -43,6 +66,15 @@ std::string execute_function(Function& func, Scope& old_scope, std::vector<std::
                 break;
             case 4:
                 scope.boolVars[s] = old_scope.boolVars[s];
+                break;
+            case 6:
+                scope.arrayVars[s] = old_scope.arrayVars[s];
+                break;
+            case 7:
+                scope.skiplistVars[s] = old_scope.skiplistVars[s];
+                break;
+            case 8:
+                scope.stackVars[s] = old_scope.stackVars[s];
                 break;
             case 12:
                 scope.funcVars[s] = old_scope.funcVars[s];
@@ -75,6 +107,15 @@ std::string execute_function(Function& func, Scope& old_scope, std::vector<std::
                 case 4:
                     old_scope.boolVars.erase(s);
                     break;
+                case 6:
+                    old_scope.arrayVars.erase(s);
+                    break;
+                case 7:
+                    old_scope.skiplistVars.erase(s);
+                    break;
+                case 8:
+                    old_scope.stackVars.erase(s);
+                    break;
                 case 12:
                     old_scope.funcVars.erase(s);
                     break;
@@ -97,6 +138,15 @@ std::string execute_function(Function& func, Scope& old_scope, std::vector<std::
                 break;
             case 4:
                 old_scope.boolVars[s] = scope.boolVars[s];
+                break;
+            case 6:
+                old_scope.arrayVars[s] = scope.arrayVars[s];
+                break;
+            case 7:
+                old_scope.skiplistVars[s] = scope.skiplistVars[s];
+                break;
+            case 8:
+                old_scope.stackVars[s] = scope.stackVars[s];
                 break;
             case 12:
                 old_scope.funcVars[s] = scope.funcVars[s];
@@ -121,6 +171,15 @@ std::string execute_function(Function& func, Scope& old_scope, std::vector<std::
             case 4:
                 old_scope.boolVars[ns] = scope.boolVars[s];
                 break;
+            case 6:
+                old_scope.arrayVars[ns] = scope.arrayVars[ns];
+                break;
+            case 7:
+                old_scope.skiplistVars[ns] = scope.skiplistVars[ns];
+                break;
+            case 8:
+                old_scope.stackVars[ns] = scope.stackVars[ns];
+                break;
             case 12:
                 old_scope.funcVars[ns] = scope.funcVars[s];
                 break;
@@ -136,6 +195,7 @@ std::string execute_function(Function& func, Scope& old_scope, std::vector<std::
 std::string copy_to_const(std::string s, Scope& scope){
     std::string ns = genRndString(5);
     scope.VarsToType[ns] = scope.VarsToType[s];
+    scope.VarsToType[ns].first = false;
     switch (scope.VarsToType[s].second) {
         case 0:
             scope.intVars[ns] = scope.intVars[s];
@@ -145,6 +205,15 @@ std::string copy_to_const(std::string s, Scope& scope){
             break;
         case 4:
             scope.boolVars[ns] = scope.boolVars[s];
+            break;
+        case 6:
+            scope.arrayVars[ns] = scope.arrayVars[s];
+            break;
+        case 7:
+            scope.skiplistVars[ns] = scope.skiplistVars[s];
+            break;
+        case 8:
+            scope.stackVars[ns] = scope.stackVars[s];
             break;
         case 12:
             scope.funcVars[ns] = scope.funcVars[s];
@@ -242,6 +311,15 @@ void print_vals(const std::vector<std::string>& a, Scope& scope){
             case 4:
                 std::cout << boolVars[x] << ' ';
                 break;
+//            case 6:
+//                scope.arrayVars[ns] = scope.arrayVars[s];
+//                break;
+//            case 7:
+//                scope.skiplistVars[ns] = scope.skiplistVars[s];
+//                break;
+//            case 8:
+//                scope.stackVars[ns] = scope.stackVars[s];
+//                break;
             case 13:
                 if (get_precision() != -1)
                     std::cout.precision(get_precision());
