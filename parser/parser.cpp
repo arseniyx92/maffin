@@ -154,21 +154,21 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
         case 1:
         {
             if (tree[v].val == "="){
-                if (p == -1 || tree[p].variables.size() != 1 || vars.size() != 1 ||
-                    !VarsToType.count(vars[0]) || !VarsToType.count(tree[p].variables[0]) ||
-                    VarsToType[vars[0]].second != VarsToType[tree[p].variables[0]].second){
-                    if (!VarsToType.count(vars[0]) || !VarsToType.count(tree[p].variables[0])){
-                        std::cout << "'=' - Variable is not declared" << std::endl;
-                    }else if (VarsToType[vars[0]].second != VarsToType[tree[p].variables[0]].second){
-                        std::cout << "'=' - Variables have another types" << std::endl;
-                    }else if (tree[p].variables.size() != 1 || vars.size() != 1){
-                        std::cout << "'=' - U wanna do '=' for multiple variables (it's not ready yet)" << std::endl;
-                    }else{
-                        std::cout << "'=' - something extremely bad happened" << std::endl;
-                    }
-                    assert(false);
-                }
-                switch (VarsToType[vars[0]].second){
+//                if (p == -1 || tree[p].variables.size() != 1 || vars.size() != 1 ||
+//                    !VarsToType.count(vars[0]) || !VarsToType.count(tree[p].variables[0]) ||
+//                    VarsToType[vars[0]].second != VarsToType[tree[p].variables[0]].second){
+//                    if (!VarsToType.count(vars[0]) || !VarsToType.count(tree[p].variables[0])){
+//                        std::cout << "'=' - Variable is not declared" << std::endl;
+//                    }else if (VarsToType[vars[0]].second != VarsToType[tree[p].variables[0]].second){
+//                        std::cout << "'=' - Variables have another types" << std::endl;
+//                    }else if (tree[p].variables.size() != 1 || vars.size() != 1){
+//                        std::cout << "'=' - U wanna do '=' for multiple variables (it's not ready yet)" << std::endl;
+//                    }else{
+//                        std::cout << "'=' - something extremely bad happened" << std::endl;
+//                    }
+//                    assert(false);
+//                }
+                switch (VarsToType[tree[p].variables[0]].second){
                     case 0:
                     {
                         intVars[tree[p].variables[0]] = intVars[vars[0]];
@@ -176,7 +176,11 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     }
                     case 1:
                     {
-                        longintVars[tree[p].variables[0]] = longintVars[vars[0]];
+                        if (VarsToType[vars[0]].second == 0){
+                            longintVars[tree[p].variables[0]] = intVars[vars[0]];
+                        }else {
+                            longintVars[tree[p].variables[0]] = longintVars[vars[0]];
+                        }
                         break;
                     }
                     case 4:
@@ -332,7 +336,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             longintVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = {false, 0};
+                        VarsToType[s] = {false, 1};
                         longintVars[s] = ans;
                         vars.clear();
                         vars.shrink_to_fit();
@@ -350,7 +354,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             doubleVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = {false, 0};
+                        VarsToType[s] = {false, 13};
                         doubleVars[s] = ans;
                         vars.clear();
                         vars.shrink_to_fit();
@@ -362,7 +366,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
             }else if (tree[v].val == "-"){
                 std::string firstStr, secondStr;
                 if (vars.empty()){
-                    std::cout << "FATAL: doesn't have enough elements to be composed (+)" << std::endl;
+                    std::cout << "FATAL: doesn't have enough elements to be composed (-)" << std::endl;
                     assert(false);
                 }
                 if (tree[p].variables.empty()){
@@ -370,25 +374,19 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                         std::cout << "'-x' problem, 'x' is more than 1 variable" << std::endl;
                         assert(false);
                     }
-                    std::string s = genRndString(5);
-                    VarsToType[s] = {false, VarsToType[vars.back()].second};
-                    switch (VarsToType[vars.back()].second){
-                        case 0: intVars[s] = -intVars[vars.back()];
-                        case 1: longintVars[s] = -longintVars[vars.back()];
-                        case 13: doubleVars[s] = -doubleVars[vars.back()];
-                    }
+                    std::string result = vars.back();
                     vars.clear();
                     vars.shrink_to_fit();
-                    return {s};
+                    return {result};
                 }
-                firstStr = tree[p].variables.back();
-                secondStr = vars.back();
+                firstStr = vars.back();
+                secondStr = tree[p].variables.back();
                 vars.pop_back();
                 tree[p].variables.pop_back();
                 switch (VarsToType[firstStr].second){
                     case 0:
                     {
-                        int ans = intVars[firstStr]-intVars[secondStr];
+                        int ans = intVars[secondStr]-intVars[firstStr];
                         if (firstStr[0] == '+'){
                             VarsToType.erase(firstStr);
                             intVars.erase(firstStr);
@@ -406,7 +404,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     }
                     case 1:
                     {
-                        long long ans = longintVars[firstStr]-longintVars[secondStr];
+                        long long ans = longintVars[secondStr]-longintVars[firstStr];
                         if (firstStr[0] == '+'){
                             VarsToType.erase(firstStr);
                             longintVars.erase(firstStr);
@@ -416,7 +414,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             longintVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
-                        VarsToType[s] = {false, 0};
+                        VarsToType[s] = {false, 1};
                         longintVars[s] = ans;
                         vars.clear();
                         vars.shrink_to_fit();
@@ -424,7 +422,7 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                     }
                     case 13:
                     {
-                        long double ans = doubleVars[firstStr]-doubleVars[secondStr];
+                        long double ans = doubleVars[secondStr]-doubleVars[firstStr];
                         if (firstStr[0] == '+'){
                             VarsToType.erase(firstStr);
                             doubleVars.erase(firstStr);
@@ -434,7 +432,163 @@ std::vector<std::string> go(int v, int p, int what_child, std::vector<Node>& tre
                             doubleVars.erase(secondStr);
                         }
                         std::string s = genRndString(5);
+                        VarsToType[s] = {false, 13};
+                        doubleVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
+                        return {s};
+                    }
+                    default:
+                        assert(false);
+                }
+            }else if (tree[v].val == "*"){
+                std::string firstStr, secondStr;
+                if (vars.empty()){
+                    std::cout << "FATAL: doesn't have enough elements to be composed (*)" << std::endl;
+                    assert(false);
+                }
+                if (tree[p].variables.empty()){
+                    if (vars.size() > 1){
+                        std::cout << "'*x' problem, 'x' is more than 1 variable" << std::endl;
+                        assert(false);
+                    }
+                    std::string result = vars.back();
+                    vars.clear();
+                    vars.shrink_to_fit();
+                    return {result};
+                }
+                firstStr = vars.back();
+                secondStr = tree[p].variables.back();
+                vars.pop_back();
+                tree[p].variables.pop_back();
+                switch (VarsToType[firstStr].second){
+                    case 0:
+                    {
+                        int ans = intVars[firstStr]*intVars[secondStr];
+                        if (firstStr[0] == '+'){
+                            VarsToType.erase(firstStr);
+                            intVars.erase(firstStr);
+                        }
+                        if (secondStr[0] == '+'){
+                            VarsToType.erase(secondStr);
+                            intVars.erase(secondStr);
+                        }
+                        std::string s = genRndString(5);
                         VarsToType[s] = {false, 0};
+                        intVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
+                        return {s};
+                    }
+                    case 1:
+                    {
+                        long long ans = longintVars[firstStr]*longintVars[secondStr];
+                        if (firstStr[0] == '+'){
+                            VarsToType.erase(firstStr);
+                            longintVars.erase(firstStr);
+                        }
+                        if (secondStr[0] == '+'){
+                            VarsToType.erase(secondStr);
+                            longintVars.erase(secondStr);
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 1};
+                        longintVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
+                        return {s};
+                    }
+                    case 13:
+                    {
+                        long double ans = doubleVars[firstStr]*doubleVars[secondStr];
+                        if (firstStr[0] == '+'){
+                            VarsToType.erase(firstStr);
+                            doubleVars.erase(firstStr);
+                        }
+                        if (secondStr[0] == '+'){
+                            VarsToType.erase(secondStr);
+                            doubleVars.erase(secondStr);
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 13};
+                        doubleVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
+                        return {s};
+                    }
+                    default:
+                        assert(false);
+                }
+            }else if (tree[v].val == "/"){
+                std::string firstStr, secondStr;
+                if (vars.empty()){
+                    std::cout << "FATAL: doesn't have enough elements to be composed (/)" << std::endl;
+                    assert(false);
+                }
+                if (tree[p].variables.empty()){
+                    if (vars.size() > 1){
+                        std::cout << "'/x' problem, 'x' is more than 1 variable" << std::endl;
+                        assert(false);
+                    }
+                    std::string result = vars.back();
+                    vars.clear();
+                    vars.shrink_to_fit();
+                    return {result};
+                }
+                firstStr = vars.back();
+                secondStr = tree[p].variables.back();
+                vars.pop_back();
+                tree[p].variables.pop_back();
+                switch (VarsToType[firstStr].second){
+                    case 0:
+                    {
+                        int ans = intVars[secondStr]/intVars[firstStr];
+                        if (firstStr[0] == '+'){
+                            VarsToType.erase(firstStr);
+                            intVars.erase(firstStr);
+                        }
+                        if (secondStr[0] == '+'){
+                            VarsToType.erase(secondStr);
+                            intVars.erase(secondStr);
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 0};
+                        intVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
+                        return {s};
+                    }
+                    case 1:
+                    {
+                        long long ans = longintVars[secondStr]/longintVars[firstStr];
+                        if (firstStr[0] == '+'){
+                            VarsToType.erase(firstStr);
+                            longintVars.erase(firstStr);
+                        }
+                        if (secondStr[0] == '+'){
+                            VarsToType.erase(secondStr);
+                            longintVars.erase(secondStr);
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 1};
+                        longintVars[s] = ans;
+                        vars.clear();
+                        vars.shrink_to_fit();
+                        return {s};
+                    }
+                    case 13:
+                    {
+                        long double ans = doubleVars[secondStr]/doubleVars[firstStr];
+                        if (firstStr[0] == '+'){
+                            VarsToType.erase(firstStr);
+                            doubleVars.erase(firstStr);
+                        }
+                        if (secondStr[0] == '+'){
+                            VarsToType.erase(secondStr);
+                            doubleVars.erase(secondStr);
+                        }
+                        std::string s = genRndString(5);
+                        VarsToType[s] = {false, 13};
                         doubleVars[s] = ans;
                         vars.clear();
                         vars.shrink_to_fit();
