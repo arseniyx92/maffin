@@ -48,10 +48,12 @@ on brackets and order.
 
 :
 
-###### NAME--------------TIME NOTATIONS
-**array**----------------set(O(1)), get(O(1)) | size = O(n)\
-**stack**----------------set(O(1)), get(O(1)), push(O(1)), pop(O(1)), size = O(n)\
-**skiplist**--------------------set(O(logn)), get(O(logn)), insert(O(logn)), erase(O(logn)), size = O(nlogn)
+###### STRUCTURES-------AND-THEIR-------TIME/MEMORY-NOTATIONS
+| structure |  set()  |  get()  | push() | pop() | insert() | erase() |   size   |
+|:---------:|:-------:|:-------:|:------:|:-----:|:--------:|:-------:|:--------:|
+|   array   |   O(1)  |   O(1)  |    -   |   -   |     -    |    -    |   O(n)   |
+|   stack   |   O(1)  |   O(1)  |  O(1)  |  O(1) |     -    |    -    |   O(n)   |
+|  skiplist | O(logn) | O(logn) |    -   |   -   |  O(logn) | O(logn) | O(nlogn) |
 
 :
 
