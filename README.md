@@ -11,8 +11,11 @@ For changing float numbers' precision:
 If you need to print something:
 `print( "something" )`
 
-To compile text
+To compile text while writing in terminal
 `~`
+
+To make executable file from imported one:
+`chmod 755 maffin_mac` or `chmod 755 maffin_linux`
 
 ## WARNINGS
 
